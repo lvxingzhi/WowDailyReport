@@ -1,0 +1,454 @@
+/* ============================================
+   大秘境分数行情 · 幻灯片信息图样式
+   暗色魔兽风主题，16:9 比例
+   @author ext.ahs.lvxingz1
+   ============================================ */
+
+/* --- 基础重置 --- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-deep: #0a0e17;
+  --bg-surface: #111827;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --border-card: rgba(201, 168, 76, 0.15);
+  --gold: #c9a84c;
+  --gold-light: #e4c76b;
+  --orange: #d4783b;
+  --orange-light: #f0a05a;
+  --red: #c94c4c;
+  --text-primary: #f0f0f0;
+  --text-secondary: #8892a4;
+  --text-muted: #5a6377;
+  --slide-width: 1920px;
+  --slide-height: 1080px;
+  --safe-pad-y: 5%;
+  --safe-pad-x: 8%;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- 幻灯片容器 --- */
+#slides-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201, 168, 76, 0.06) 0%, transparent 60%),
+              linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-surface) 100%);
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.slide-content {
+  width: 84%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-label {
+  font-size: 18px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  margin-bottom: 36px;
+  opacity: 0.7;
+}
+
+/* --- 卡片组件 --- */
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 16px;
+  padding: 28px 40px;
+  text-align: center;
+  min-width: 180px;
+  backdrop-filter: blur(8px);
+}
+
+.stat-card.large {
+  padding: 40px 56px;
+  min-width: 240px;
+}
+
+.stat-value {
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.stat-value.accent-warn { color: var(--orange); }
+.stat-value.accent-gold { color: var(--gold); }
+.stat-value.accent-orange { color: var(--orange-light); }
+
+.stat-label {
+  font-size: 18px;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+}
+
+/* --- Slide 1: 赛季概览 --- */
+.season-overview {
+  text-align: center;
+  width: 100%;
+}
+
+.season-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.season-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 3px;
+}
+
+.season-date {
+  font-size: 18px;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 6px 18px;
+}
+
+.season-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+}
+
+.hero-card {
+  text-align: center;
+}
+
+.hero-value {
+  font-size: 140px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  text-shadow: 0 0 40px rgba(201, 168, 76, 0.15);
+}
+
+.hero-card.accent .hero-value {
+  color: var(--gold-light);
+  text-shadow: 0 0 60px rgba(201, 168, 76, 0.3);
+}
+
+.hero-label {
+  font-size: 22px;
+  color: var(--text-secondary);
+  letter-spacing: 4px;
+  margin-top: 12px;
+}
+
+.hero-divider {
+  width: 2px;
+  height: 100px;
+  background: linear-gradient(180deg, transparent, rgba(201, 168, 76, 0.2), transparent);
+}
+
+/* --- Slide 2/6/7: 图表通用 --- */
+.chart-box {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.chart-box-half {
+  width: 60%;
+}
+
+/* --- Slide 3: 第一名高光 --- */
+.rank1-highlight {
+  text-align: center;
+}
+
+.rank1-score {
+  font-size: 120px;
+  font-weight: 800;
+  color: var(--gold-light);
+  line-height: 1;
+  text-shadow: 0 0 60px rgba(201, 168, 76, 0.3);
+  margin-bottom: 24px;
+}
+
+.rank1-player {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.rank1-name {
+  font-size: 42px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.rank1-class {
+  font-size: 24px;
+  color: var(--gold);
+  background: rgba(201, 168, 76, 0.1);
+  padding: 6px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(201, 168, 76, 0.25);
+}
+
+.rank1-team {
+  font-size: 22px;
+  color: var(--text-secondary);
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.rank1-team .member {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 8px 20px;
+}
+
+/* --- Slide 4: 国家队生态 --- */
+.eco-grid {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  gap: 48px;
+}
+
+.eco-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 55%;
+  height: 100%;
+}
+
+.eco-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+}
+
+.eco-lineup {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  justify-content: center;
+}
+
+.lineup-role {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 16px;
+  padding: 24px 36px;
+}
+
+.lineup-role-name {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--gold-light);
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+}
+
+.lineup-classes {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.lineup-class-tag {
+  font-size: 20px;
+  color: var(--text-primary);
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 8px;
+  padding: 8px 24px;
+}
+
+/* --- Slide 5: 信仰专精 --- */
+.faith-cards {
+  display: flex;
+  gap: 48px;
+  justify-content: center;
+}
+
+.faith-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 20px;
+  padding: 48px 56px;
+  text-align: center;
+  min-width: 280px;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.3s, transform 0.3s;
+}
+
+.faith-card:hover {
+  border-color: rgba(201, 168, 76, 0.35);
+  transform: translateY(-4px);
+}
+
+.faith-spec-name {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.faith-spec-score {
+  font-size: 64px;
+  font-weight: 800;
+  color: var(--gold-light);
+  line-height: 1;
+}
+
+.faith-spec-label {
+  font-size: 14px;
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  margin-top: 8px;
+}
+
+/* --- 导航 --- */
+.nav {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  z-index: 100;
+}
+
+.nav-arrow {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  font-size: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav-arrow:hover {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: rgba(201, 168, 76, 0.3);
+  color: var(--gold);
+}
+
+.nav-dots {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.nav-dot.active {
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(201, 168, 76, 0.4);
+}
+
+/* --- 键盘提示 --- */
+/* --- 专精图标 --- */
+.spec-icon {
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 4px;
+}
+
+.spec-icon.icon-sm {
+  width: 24px;
+  height: 24px;
+  margin-right: 6px;
+}
+
+.spec-icon.icon-md {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.spec-icon.icon-lg {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 2px solid rgba(201, 168, 76, 0.3);
+}
+
+.lineup-class-tag {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* --- 键盘提示 --- */
+.key-hint {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  opacity: 0;
+  transition: opacity 1s;
+}

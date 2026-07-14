@@ -1,0 +1,320 @@
+{
+  "meta": {
+    "season": "至暗之夜S1",
+    "generatedAt": "2026-07-14T18:25:39",
+    "dataCount": 4,
+    "latestDate": "20260717"
+  },
+  "daily": [
+    {
+      "date": "20260714",
+      "season": "至暗之夜S1",
+      "seasonWeek": 16,
+      "weeksRemaining": 5,
+      "rank1": {
+        "score": 4412,
+        "player": "Рэйвмейв",
+        "class": "D增辉",
+        "team": [
+          "Drtreantino",
+          "Roibendeux",
+          "Рэйвмейв",
+          "Speedk",
+          "Voluxar"
+        ]
+      },
+      "top1Pct": 3955.63,
+      "top01Pct": 4210.72,
+      "iron24": 79,
+      "iron23": 1430,
+      "nationalTeamRatio": 0.96,
+      "nonNationalRatio": 0.04,
+      "faithSpecs": [
+        {
+          "name": "D湮灭",
+          "score": 3907.9
+        },
+        {
+          "name": "D火法",
+          "score": 4022.3
+        },
+        {
+          "name": "H神牧",
+          "score": 4059.5
+        }
+      ],
+      "dungeons": [
+        {
+          "name": "艾杰斯亚学院",
+          "level": 24
+        },
+        {
+          "name": "魔导师平台",
+          "level": 25
+        },
+        {
+          "name": "迈萨拉洞窟",
+          "level": 25
+        },
+        {
+          "name": "节点希纳斯",
+          "level": 24
+        },
+        {
+          "name": "萨隆矿坑",
+          "level": 25
+        },
+        {
+          "name": "执政团之座",
+          "level": 24
+        },
+        {
+          "name": "通天峰",
+          "level": 24
+        },
+        {
+          "name": "风行者之塔",
+          "level": 24
+        }
+      ]
+    },
+    {
+      "date": "20260715",
+      "season": "至暗之夜S1",
+      "seasonWeek": 16,
+      "weeksRemaining": 5,
+      "rank1": {
+        "score": 4414,
+        "player": "Рэйвмейв",
+        "class": "D增辉",
+        "team": [
+          "Drtreantino",
+          "Roibendeux",
+          "Рэйвмейв",
+          "Speedk",
+          "Voluxar"
+        ]
+      },
+      "top1Pct": 3958.63,
+      "top01Pct": 4212.72,
+      "iron24": 82,
+      "iron23": 1437,
+      "nationalTeamRatio": 0.96,
+      "nonNationalRatio": 0.04,
+      "faithSpecs": [
+        {
+          "name": "D湮灭",
+          "score": 3907.9
+        },
+        {
+          "name": "D火法",
+          "score": 4022.3
+        },
+        {
+          "name": "H神牧",
+          "score": 4059.5
+        }
+      ],
+      "dungeons": [
+        {
+          "name": "艾杰斯亚学院",
+          "level": 24
+        },
+        {
+          "name": "魔导师平台",
+          "level": 25
+        },
+        {
+          "name": "迈萨拉洞窟",
+          "level": 25
+        },
+        {
+          "name": "节点希纳斯",
+          "level": 24
+        },
+        {
+          "name": "萨隆矿坑",
+          "level": 25
+        },
+        {
+          "name": "执政团之座",
+          "level": 24
+        },
+        {
+          "name": "通天峰",
+          "level": 24
+        },
+        {
+          "name": "风行者之塔",
+          "level": 24
+        }
+      ]
+    },
+    {
+      "date": "20260716",
+      "season": "至暗之夜S1",
+      "seasonWeek": 16,
+      "weeksRemaining": 5,
+      "rank1": {
+        "score": 4416,
+        "player": "Рэйвмейв",
+        "class": "D增辉",
+        "team": [
+          "Drtreantino",
+          "Roibendeux",
+          "Рэйвмейв",
+          "Speedk",
+          "Voluxar"
+        ]
+      },
+      "top1Pct": 3965.63,
+      "top01Pct": 4214.72,
+      "iron24": 86,
+      "iron23": 1456,
+      "nationalTeamRatio": 0.96,
+      "nonNationalRatio": 0.04,
+      "faithSpecs": [
+        {
+          "name": "D湮灭",
+          "score": 3907.9
+        },
+        {
+          "name": "D火法",
+          "score": 4022.3
+        },
+        {
+          "name": "H神牧",
+          "score": 4059.5
+        }
+      ],
+      "dungeons": [
+        {
+          "name": "艾杰斯亚学院",
+          "level": 24
+        },
+        {
+          "name": "魔导师平台",
+          "level": 25
+        },
+        {
+          "name": "迈萨拉洞窟",
+          "level": 25
+        },
+        {
+          "name": "节点希纳斯",
+          "level": 25
+        },
+        {
+          "name": "萨隆矿坑",
+          "level": 25
+        },
+        {
+          "name": "执政团之座",
+          "level": 24
+        },
+        {
+          "name": "通天峰",
+          "level": 24
+        },
+        {
+          "name": "风行者之塔",
+          "level": 24
+        }
+      ]
+    },
+    {
+      "date": "20260717",
+      "season": "至暗之夜S1",
+      "seasonWeek": 16,
+      "weeksRemaining": 5,
+      "rank1": {
+        "score": 4418,
+        "player": "Рэйвмейв",
+        "class": "D增辉",
+        "team": [
+          "Drtreantino",
+          "Roibendeux",
+          "Рэйвмейв",
+          "Speedk",
+          "Voluxar"
+        ]
+      },
+      "top1Pct": 3975.63,
+      "top01Pct": 4218.72,
+      "iron24": 95,
+      "iron23": 1498,
+      "nationalTeamRatio": 0.96,
+      "nonNationalRatio": 0.04,
+      "faithSpecs": [
+        {
+          "name": "D湮灭",
+          "score": 3907.9
+        },
+        {
+          "name": "D火法",
+          "score": 4022.3
+        },
+        {
+          "name": "H神牧",
+          "score": 4059.5
+        }
+      ],
+      "dungeons": [
+        {
+          "name": "艾杰斯亚学院",
+          "level": 25
+        },
+        {
+          "name": "魔导师平台",
+          "level": 25
+        },
+        {
+          "name": "迈萨拉洞窟",
+          "level": 25
+        },
+        {
+          "name": "节点希纳斯",
+          "level": 25
+        },
+        {
+          "name": "萨隆矿坑",
+          "level": 25
+        },
+        {
+          "name": "执政团之座",
+          "level": 24
+        },
+        {
+          "name": "通天峰",
+          "level": 24
+        },
+        {
+          "name": "风行者之塔",
+          "level": 24
+        }
+      ]
+    }
+  ],
+  "nationalTeam": [
+    {
+      "role": "坦克",
+      "classes": [
+        "T熊T"
+      ]
+    },
+    {
+      "role": "治疗",
+      "classes": [
+        "H奶僧"
+      ]
+    },
+    {
+      "role": "输出",
+      "classes": [
+        "D增辉",
+        "D邪DK",
+        "D噬灭"
+      ]
+    }
+  ]
+}
