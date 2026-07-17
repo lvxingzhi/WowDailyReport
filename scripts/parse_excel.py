@@ -17,37 +17,59 @@ import openpyxl
 
 # 项目根目录（scripts 的上级目录）
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-EXCEL_FILE = PROJECT_ROOT / "大秘境分数行情_至暗之夜S1.xlsx"
+EXCEL_FILE = PROJECT_ROOT / "大秘境分数行情_至暗之夜第一赛季.xlsx"
 DATA_DIR = PROJECT_ROOT / "data"
 ARCHIVE_DIR = DATA_DIR / "archive"
 CURRENT_FILE = DATA_DIR / "current.json"
 
-# 国家队阵容 Sheet 名称
-NATIONAL_TEAM_SHEET = "国家队阵容"
+# 强势阵容 Sheet 名称
+NATIONAL_TEAM_SHEET = "强势阵容"
 
-# 副本名称起始列索引（第 20 列，即 Excel 第 21 列，减去表头行偏移后为 20）
-DUNGEON_START_COL = 20
+# 列索引常量
+COL_DATE = 0       # 日期
+COL_SEASON = 1     # 赛季
+COL_WEEK = 2       # 赛季周
+COL_REMAINING = 3  # 距离结束(周)
+COL_HIGHEST_SCORE = 4   # 最高分数
+COL_TOP01_PCT = 5      # 0.1%分数
+COL_TOP1_PCT = 6       # 1%分数
+COL_TEAM = 7           # 最高队伍(角色名-职业,逗号分隔)
+DUNGEON_START_COL = 8  # 副本层数起始列（8~15，共8个）
+COL_IRON24 = 16        # 最高铁人数
+COL_IRON23 = 17        # 次铁人数
+SPEC_START_COL = 18    # 专精分数起始列（18~57，共40个）
 
 
 def parse_national_team(ws) -> list:
     """
-    解析「国家队阵容」Sheet，每行第一列为职责名，后续列为职业名。
+    解析「强势阵容」Sheet，每行是一套5人阵容。
+
+    第一行为角色头（坦克, 治疗, 输出, 输出, 输出），
+    后续每行对应一套阵容。
 
     参数:
-        ws: openpyxl worksheet 对象（国家队阵容 Sheet）
+        ws: openpyxl worksheet 对象（强势阵容 Sheet）
 
     返回:
-        list: [{ "role": "坦克", "classes": ["熊T"] }, ...]
+        list: [{ "group": "阵容1", "members": [{ "role": "坦克", "class": "T熊T" }, ...] }, ...]
     """
-    lineup = []
-    for row in ws.iter_rows(min_row=1, values_only=True):
-        if row[0] is None:
-            continue
-        role = str(row[0]).strip()
-        classes = [str(c).strip() for c in row[1:] if c is not None and str(c).strip()]
-        if classes:
-            lineup.append({"role": role, "classes": classes})
-    return lineup
+    headers = [cell.value for cell in ws[1]]
+    lineups = []
+    for row_idx, row in enumerate(ws.iter_rows(min_row=2, values_only=True), 1):
+        members = []
+        for i, class_val in enumerate(row):
+            if class_val is not None and str(class_val).strip():
+                role = headers[i] if i < len(headers) and headers[i] else "输出"
+                members.append({
+                    "role": role,
+                    "class": str(class_val).strip()
+                })
+        if members:
+            lineups.append({
+                "group": f"阵容{row_idx}",
+                "members": members
+            })
+    return lineups
 
 
 def parse_excel(excel_path: str) -> dict:
@@ -58,7 +80,7 @@ def parse_excel(excel_path: str) -> dict:
         excel_path: Excel 文件路径
 
     返回:
-        dict: 包含 meta 和 daily 的完整数据结构
+        dict: 包含 meta、daily 和 nationalTeam 的完整数据结构
     """
     wb = openpyxl.load_workbook(excel_path, data_only=True)
     ws = wb["每日数据"]
@@ -66,8 +88,11 @@ def parse_excel(excel_path: str) -> dict:
     # 读取表头
     headers = [cell.value for cell in ws[1]]
 
-    # 获取副本名称列表（第 20 列起）
-    dungeon_names = headers[DUNGEON_START_COL:]
+    # 获取副本名称列表（第 8~15 列）
+    dungeon_names = headers[DUNGEON_START_COL:DUNGEON_START_COL + 8]
+
+    # 获取专精名称列表（第 18~57 列，共 40 个）
+    spec_names = headers[SPEC_START_COL:]
 
     daily_list = []
 
@@ -75,8 +100,8 @@ def parse_excel(excel_path: str) -> dict:
         if row[0] is None:
             continue
 
-        # 日期转换：数字 → 字符串
-        raw_date = row[0]
+        # --- 日期解析 ---
+        raw_date = row[COL_DATE]
         if isinstance(raw_date, (int, float)):
             date_str = str(int(raw_date))
         elif isinstance(raw_date, datetime):
@@ -84,47 +109,108 @@ def parse_excel(excel_path: str) -> dict:
         else:
             date_str = str(raw_date)
 
-        # 队伍成员拆分
-        team_str = row[7] or ""
-        team_list = [m.strip() for m in team_str.split(",") if m.strip()]
+        # --- 队伍解析（格式："角色名-职业,角色名-职业,..."） ---
+        team_str = str(row[COL_TEAM] or "").strip().replace("\t", "")
+        team_entries = [m.strip() for m in team_str.split(",") if m.strip()]
 
-        # 副本数据
+        team_players = []
+        rank1_player = ""
+        rank1_class = ""
+        for i, entry in enumerate(team_entries):
+            if "-" in entry:
+                parts = entry.rsplit("-", 1)
+                player = parts[0].strip()
+                cls = parts[1].strip()
+            else:
+                player = entry
+                cls = ""
+            team_players.append({"player": player, "class": cls})
+            if i == 0:
+                rank1_player = player
+                rank1_class = cls
+
+        # --- 最高分数解析 ---
+        score_raw = row[COL_HIGHEST_SCORE]
+        rank1_score = 0
+        if score_raw is not None:
+            if isinstance(score_raw, str):
+                score_raw = score_raw.strip().replace("\t", "")
+            try:
+                rank1_score = int(float(score_raw))
+            except (ValueError, TypeError):
+                rank1_score = 0
+
+        # --- 安全转换函数 ---
+        def safe_int(val, default=0):
+            if val is None:
+                return default
+            if isinstance(val, str):
+                val = val.strip().replace("\t", "")
+            try:
+                return int(float(val))
+            except (ValueError, TypeError):
+                return val  # 保留非数字原始值（如 "?"）
+
+        def safe_float(val):
+            if val is None:
+                return 0.0
+            if isinstance(val, str):
+                val = val.strip().replace("\t", "")
+            try:
+                return float(val)
+            except (ValueError, TypeError):
+                return 0.0
+
+        top01pct = safe_float(row[COL_TOP01_PCT])
+        top1pct = safe_float(row[COL_TOP1_PCT])
+
+        # --- 铁钥匙人数 ---
+        iron24 = safe_int(row[COL_IRON24])
+        iron23 = safe_int(row[COL_IRON23])
+
+        # --- 专精分数（40 个） ---
+        faith_specs = []
+        for i, name in enumerate(spec_names):
+            col_idx = SPEC_START_COL + i
+            score = safe_float(row[col_idx] if col_idx < len(row) else None)
+            faith_specs.append({
+                "name": name if name else f"专精{i + 1}",
+                "score": score
+            })
+        # 按分数从高到低排序
+        faith_specs.sort(key=lambda x: x["score"], reverse=True)
+
+        # --- 副本数据 ---
         dungeons = []
         for i, name in enumerate(dungeon_names):
             col_idx = DUNGEON_START_COL + i
-            level = row[col_idx] if col_idx < len(row) else 0
+            level = row[col_idx] if col_idx < len(row) else None
             dungeons.append({
-                "name": name,
+                "name": name if name else f"副本{i + 1}",
                 "level": int(level) if level is not None else 0
             })
 
         day_data = {
             "date": date_str,
-            "season": row[1],
-            "seasonWeek": int(row[2]) if row[2] is not None else 0,
-            "weeksRemaining": int(row[3]) if row[3] is not None else 0,
+            "season": row[COL_SEASON],
+            "seasonWeek": safe_int(row[COL_WEEK]),
+            "weeksRemaining": safe_int(row[COL_REMAINING]),
             "rank1": {
-                "score": int(row[4]) if row[4] is not None else 0,
-                "player": row[5] or "",
-                "class": row[6] or "",
-                "team": team_list
+                "score": rank1_score,
+                "player": rank1_player,
+                "class": rank1_class,
+                "team": team_players
             },
-            "top1Pct": float(row[8]) if row[8] is not None else 0,
-            "top01Pct": float(row[9]) if row[9] is not None else 0,
-            "iron24": int(row[10]) if row[10] is not None else 0,
-            "iron23": int(row[11]) if row[11] is not None else 0,
-            "nationalTeamRatio": float(row[12]) if row[12] is not None else 0,
-            "nonNationalRatio": float(row[13]) if row[13] is not None else 0,
-            "faithSpecs": [
-                {"name": row[14] or "", "score": float(row[15]) if row[15] is not None else 0},
-                {"name": row[16] or "", "score": float(row[17]) if row[17] is not None else 0},
-                {"name": row[18] or "", "score": float(row[19]) if row[19] is not None else 0},
-            ],
+            "top1Pct": top1pct,
+            "top01Pct": top01pct,
+            "iron24": iron24,
+            "iron23": iron23,
+            "faithSpecs": faith_specs,
             "dungeons": dungeons
         }
         daily_list.append(day_data)
 
-    # 解析国家队阵容
+    # 解析强势阵容
     national_team = []
     if NATIONAL_TEAM_SHEET in wb.sheetnames:
         national_team = parse_national_team(wb[NATIONAL_TEAM_SHEET])

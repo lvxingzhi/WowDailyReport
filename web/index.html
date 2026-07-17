@@ -3,10 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=1920, initial-scale=1.0">
-  <title>大秘境分数行情</title>
+  <title>大秘境周报</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+  <!-- 主题切换栏 -->
+  <div class="theme-bar">
+    <span class="theme-bar-label">主题</span>
+    <button class="theme-btn active" data-theme-val="default" title="经典暗金" style="background:#c9a84c;"></button>
+    <button class="theme-btn" data-theme-val="light" title="极简白昼" style="background:#f5f5f0;"></button>
+    <button class="theme-btn" data-theme-val="cyber" title="赛博朋克" style="background:#00ffc8;"></button>
+    <button class="theme-btn" data-theme-val="parchment" title="羊皮古卷" style="background:#d4a84c;"></button>
+    <button class="theme-btn" data-theme-val="mono" title="现代暗黑" style="background:#909090;"></button>
+  </div>
 
   <!-- 幻灯片容器 -->
   <div id="slides-container">
@@ -15,26 +25,30 @@
     <section class="slide" id="slide-1">
       <div class="slide-content">
         <div class="season-overview">
-          <div class="season-meta">
-            <span class="season-title" id="so-season">至暗之夜 S1</span>
-            <span class="season-date" id="so-update">07/17 更新</span>
+          <div class="s1-title">大秘境周报</div>
+          <div class="s1-meta">
+            <span id="ph-season"></span>
+            <span class="s1-sep">·</span>
+            <span id="ph-date"></span>
+            <span class="s1-sep">·</span>
+            <span id="ph-week"></span>
           </div>
           <div class="season-hero">
             <div class="hero-card">
-              <div class="hero-value" id="so-week">16</div>
+              <div class="hero-value" id="so-week"></div>
               <div class="hero-label">当前赛季周</div>
             </div>
             <div class="hero-divider"></div>
             <div class="hero-card accent">
-              <div class="hero-value" id="so-remaining">5</div>
-              <div class="hero-label">剩余周数</div>
+              <div class="hero-value" id="so-remaining"></div>
+              <div class="hero-label">预计剩余周数</div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Slide 2: 分数行情趋势 -->
+    <!-- Slide 2: 分数趋势 -->
     <section class="slide" id="slide-2">
       <div class="slide-content">
         <div class="slide-label">分数趋势</div>
@@ -42,75 +56,67 @@
       </div>
     </section>
 
-    <!-- Slide 3: 第一名高光 -->
+    <!-- Slide 3: 世界TOP5（5人小队） -->
     <section class="slide" id="slide-3">
       <div class="slide-content">
-        <div class="slide-label">世界第一</div>
-        <div class="rank1-highlight">
-          <div class="rank1-score" id="r1-score">4418</div>
-          <div class="rank1-player">
-            <span class="rank1-name" id="r1-player">Рэйвмейв</span>
-            <span class="rank1-class" id="r1-class">增辉</span>
-          </div>
-          <div class="rank1-team" id="r1-team"></div>
-        </div>
+        <div class="slide-label">世界TOP5</div>
+        <div class="team-score" id="r1-score"></div>
+        <div class="team-members" id="r1-team"></div>
       </div>
     </section>
 
-    <!-- Slide 4: 国家队生态 -->
+    <!-- Slide 4: 强势阵容 -->
     <section class="slide" id="slide-4">
       <div class="slide-content">
-        <div class="slide-label">国家队生态</div>
-        <div class="eco-grid">
-          <div class="eco-left">
-            <div class="chart-box chart-box-half" id="chart-pie"></div>
-            <div class="eco-stats">
-              <div class="stat-card">
-                <div class="stat-value accent-gold" id="eco-national">96%</div>
-                <div class="stat-label">国家队占比</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-value accent-orange" id="eco-non-national">4%</div>
-                <div class="stat-label">非国家队占比</div>
-              </div>
-            </div>
-          </div>
-          <div class="eco-lineup" id="eco-lineup"></div>
-        </div>
+        <div class="slide-label">强势阵容</div>
+        <div class="lineup-groups" id="eco-lineup"></div>
       </div>
     </section>
 
-    <!-- Slide 5: 信仰专精 -->
+    <!-- Slide 5: 专精分数排行 -->
     <section class="slide" id="slide-5">
       <div class="slide-content">
-        <div class="slide-label">信仰专精追踪</div>
-        <div class="faith-cards" id="faith-cards"></div>
+        <div class="slide-label">专精分数排行</div>
+        <div class="faith-table" id="faith-table"></div>
       </div>
     </section>
 
     <!-- Slide 6: 副本限时 -->
     <section class="slide" id="slide-6">
       <div class="slide-content">
-        <div class="slide-label">副本限时完成层数</div>
-        <div class="chart-box" id="chart-dungeons"></div>
+        <div class="slide-label">限时最高层数</div>
+        <div class="dungeon-list" id="dungeon-list"></div>
       </div>
     </section>
 
     <!-- Slide 7: 铁钥匙 -->
     <section class="slide" id="slide-7">
       <div class="slide-content">
-        <div class="slide-label">铁钥匙人数趋势</div>
+        <div class="slide-label">铁钥匙人数</div>
         <div class="chart-box" id="chart-iron"></div>
       </div>
     </section>
 
   </div>
 
+  <!-- 一图流容器（垂直长图） -->
+  <div id="one-pager"></div>
+
   <!-- 导航 -->
   <div class="nav">
     <button class="nav-arrow nav-prev" id="nav-prev">&#10094;</button>
     <div class="nav-dots" id="nav-dots"></div>
     <button class="nav-arrow nav-next" id="nav-next">&#10095;</button>
+    <div class="nav-divider"></div>
+    <button class="btn-onepager" id="btn-onepager">一图流</button>
+  </div>
+
+  <!-- 页脚 -->
+  <div class="card-footer">
+    <span class="footer-brand">制作者: 西番芥</span>
+    <span class="footer-social">
+      B站 <span class="hl">西番芥</span> · space.bilibili.com/346688237
+    </span>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>

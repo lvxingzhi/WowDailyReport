@@ -1,16 +1,16 @@
 {
   "meta": {
     "season": "至暗之夜S1",
-    "generatedAt": "2026-07-17T16:59:32",
+    "generatedAt": "2026-07-17T14:59:04",
     "dataCount": 4,
-    "latestDate": "20260717"
+    "latestDate": "20260716"
   },
   "daily": [
     {
       "date": "20260714",
       "season": "至暗之夜S1",
       "seasonWeek": 16,
-      "weeksRemaining": "?",
+      "weeksRemaining": 5,
       "rank1": {
         "score": 4412,
         "player": "Drtreantino",
@@ -243,7 +243,7 @@
       "date": "20260715",
       "season": "至暗之夜S1",
       "seasonWeek": 16,
-      "weeksRemaining": "?",
+      "weeksRemaining": 5,
       "rank1": {
         "score": 4418,
         "player": "Drtreantino",
@@ -476,7 +476,7 @@
       "date": "20260716",
       "season": "至暗之夜S1",
       "seasonWeek": 17,
-      "weeksRemaining": "?",
+      "weeksRemaining": 4,
       "rank1": {
         "score": 4418,
         "player": "Drtreantino",
@@ -706,10 +706,10 @@
       ]
     },
     {
-      "date": "20260717",
+      "date": "20260716",
       "season": "至暗之夜S1",
       "seasonWeek": 17,
-      "weeksRemaining": "?",
+      "weeksRemaining": 4,
       "rank1": {
         "score": 4418,
         "player": "Drtreantino",

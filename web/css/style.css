@@ -24,10 +24,90 @@
   --text-primary: #f0f0f0;
   --text-secondary: #8892a4;
   --text-muted: #5a6377;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --slide-width: 1920px;
   --slide-height: 1080px;
   --safe-pad-y: 5%;
   --safe-pad-x: 8%;
+}
+
+/* ============================================
+   主题 1：经典暗金 — 魔兽世界原版暗色调
+   ============================================ */
+/* :root 即为默认，无需额外 data-theme 定义 */
+
+
+/* ============================================
+   主题 2：极简白昼 — 高对比白底，杂志/信息图风格
+   ============================================ */
+[data-theme="light"] {
+  --bg-deep: #f5f5f0;
+  --bg-surface: #ffffff;
+  --bg-card: rgba(0, 0, 0, 0.02);
+  --border-card: rgba(0, 0, 0, 0.08);
+  --gold: #b8935a;
+  --gold-light: #8a6d3b;
+  --orange: #c06030;
+  --orange-light: #d4783b;
+  --red: #c04040;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+}
+
+/* ============================================
+   主题 3：赛博朋克 — 霓虹暗空，发光边框
+   ============================================ */
+[data-theme="cyber"] {
+  --bg-deep: #020408;
+  --bg-surface: #080e18;
+  --bg-card: rgba(0, 255, 200, 0.03);
+  --border-card: rgba(0, 255, 200, 0.12);
+  --gold: #00ffc8;
+  --gold-light: #40ffd8;
+  --orange: #ff4088;
+  --orange-light: #ff6aa0;
+  --red: #ff2040;
+  --text-primary: #d0f0e0;
+  --text-secondary: #608878;
+  --text-muted: #304840;
+}
+
+/* ============================================
+   主题 4：羊皮古卷 — 暖黄卷轴，魔兽任务日志质感
+   ============================================ */
+[data-theme="parchment"] {
+  --bg-deep: #2a2218;
+  --bg-surface: #352d22;
+  --bg-card: rgba(180, 140, 80, 0.08);
+  --border-card: rgba(180, 140, 80, 0.18);
+  --gold: #d4a84c;
+  --gold-light: #e8c478;
+  --orange: #c08040;
+  --orange-light: #d49860;
+  --red: #a05030;
+  --text-primary: #e8dcc8;
+  --text-secondary: #a09078;
+  --text-muted: #706048;
+  --font-ui: "Palatino", "Georgia", "STSong", "SimSun", serif;
+}
+
+/* ============================================
+   主题 5：现代暗黑 — 纯粹深黑，冷灰高亮，无暖色
+   ============================================ */
+[data-theme="mono"] {
+  --bg-deep: #000000;
+  --bg-surface: #0a0a0a;
+  --bg-card: rgba(255, 255, 255, 0.03);
+  --border-card: rgba(255, 255, 255, 0.06);
+  --gold: #909090;
+  --gold-light: #b0b0b0;
+  --orange: #707070;
+  --orange-light: #909090;
+  --red: #606060;
+  --text-primary: #d0d0d0;
+  --text-secondary: #707070;
+  --text-muted: #404040;
 }
 
 html, body {
@@ -36,8 +116,7 @@ html, body {
   overflow: hidden;
   background: var(--bg-deep);
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -57,8 +136,9 @@ html, body {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s ease;
-  background: radial-gradient(ellipse at 50% 0%, rgba(201, 168, 76, 0.06) 0%, transparent 60%),
+  background: radial-gradient(ellipse at 50% 0%, var(--gold) 0%, transparent 60%),
               linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-surface) 100%);
+  background-blend-mode: overlay;
 }
 
 .slide.active {
@@ -196,162 +276,229 @@ html, body {
   width: 60%;
 }
 
-/* --- Slide 3: 第一名高光 --- */
-.rank1-highlight {
-  text-align: center;
-}
-
-.rank1-score {
+/* --- Slide 3: 世界第一（5人小队） --- */
+.team-score {
   font-size: 120px;
   font-weight: 800;
   color: var(--gold-light);
   line-height: 1;
   text-shadow: 0 0 60px rgba(201, 168, 76, 0.3);
-  margin-bottom: 24px;
+  margin-bottom: 48px;
 }
 
-.rank1-player {
+.team-members {
   display: flex;
-  align-items: center;
-  justify-content: center;
   gap: 24px;
-  margin-bottom: 32px;
+  justify-content: center;
+  align-items: stretch;
 }
 
-.rank1-name {
-  font-size: 42px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.rank1-class {
-  font-size: 24px;
-  color: var(--gold);
-  background: rgba(201, 168, 76, 0.1);
-  padding: 6px 20px;
-  border-radius: 20px;
-  border: 1px solid rgba(201, 168, 76, 0.25);
-}
-
-.rank1-team {
-  font-size: 22px;
-  color: var(--text-secondary);
+.team-card {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 16px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.rank1-team .member {
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 8px;
-  padding: 8px 20px;
-}
-
-/* --- Slide 4: 国家队生态 --- */
-.eco-grid {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  gap: 48px;
-}
-
-.eco-left {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 55%;
-  height: 100%;
-}
-
-.eco-stats {
-  display: flex;
-  gap: 24px;
-  margin-top: 12px;
-}
-
-.eco-lineup {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  justify-content: center;
-}
-
-.lineup-role {
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: 16px;
-  padding: 24px 36px;
+  padding: 28px 32px;
+  min-width: 160px;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s;
 }
 
-.lineup-role-name {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--gold-light);
-  margin-bottom: 16px;
-  letter-spacing: 2px;
+.team-card:hover {
+  border-color: rgba(201, 168, 76, 0.3);
 }
 
-.lineup-classes {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.lineup-class-tag {
-  font-size: 20px;
-  color: var(--text-primary);
-  background: rgba(201, 168, 76, 0.1);
-  border: 1px solid rgba(201, 168, 76, 0.25);
+.team-role-badge {
+  font-size: 14px;
+  font-weight: 700;
+  padding: 6px 16px;
   border-radius: 8px;
-  padding: 8px 24px;
+  letter-spacing: 1px;
+  white-space: nowrap;
 }
 
-/* --- Slide 5: 信仰专精 --- */
-.faith-cards {
+.team-player-icon {
   display: flex;
-  gap: 48px;
+  align-items: center;
   justify-content: center;
 }
 
-.faith-card {
+.team-player-name {
+  font-size: 20px;
+  color: var(--text-primary);
+  font-weight: 500;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* 坦克 配色 */
+.team-card.team-tank {
+  border-color: rgba(228, 170, 90, 0.35);
+  background: rgba(228, 170, 90, 0.06);
+}
+.team-card.team-tank .team-role-badge {
+  color: #e4aa5a;
+  background: rgba(228, 170, 90, 0.15);
+}
+
+/* 治疗 配色 */
+.team-card.team-healer {
+  border-color: rgba(130, 200, 120, 0.35);
+  background: rgba(130, 200, 120, 0.06);
+}
+.team-card.team-healer .team-role-badge {
+  color: #82c878;
+  background: rgba(130, 200, 120, 0.15);
+}
+
+/* 输出 配色 */
+.team-card.team-dps {
+  border-color: rgba(201, 98, 76, 0.35);
+  background: rgba(201, 98, 76, 0.06);
+}
+.team-card.team-dps .team-role-badge {
+  color: #c9624c;
+  background: rgba(201, 98, 76, 0.15);
+}
+
+/* --- Slide 4: 强势阵容（2套阵容） --- */
+.lineup-groups {
+  display: flex;
+  gap: 48px;
+  width: 100%;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.lineup-group {
+  flex: 1;
+  max-width: 46%;
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: 20px;
-  padding: 48px 56px;
-  text-align: center;
-  min-width: 280px;
+  padding: 36px 40px;
   backdrop-filter: blur(8px);
-  transition: border-color 0.3s, transform 0.3s;
 }
 
-.faith-card:hover {
-  border-color: rgba(201, 168, 76, 0.35);
-  transform: translateY(-4px);
-}
-
-.faith-spec-name {
-  font-size: 28px;
+.lineup-group-title {
+  font-size: 24px;
   font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 16px;
-}
-
-.faith-spec-score {
-  font-size: 64px;
-  font-weight: 800;
   color: var(--gold-light);
-  line-height: 1;
+  text-align: center;
+  letter-spacing: 4px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
 }
 
-.faith-spec-label {
-  font-size: 14px;
+.lineup-members {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lineup-member-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 14px 24px;
+  transition: border-color 0.2s;
+}
+
+.lineup-member-card:hover {
+  border-color: rgba(201, 168, 76, 0.2);
+}
+
+.lineup-member-role {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 6px;
+  letter-spacing: 1px;
+  min-width: 48px;
+  text-align: center;
+}
+
+.lineup-member-role.role-tank {
+  color: #e4aa5a;
+  background: rgba(228, 170, 90, 0.12);
+}
+
+.lineup-member-role.role-healer {
+  color: #82c878;
+  background: rgba(130, 200, 120, 0.12);
+}
+
+.lineup-member-role.role-dps {
+  color: #c9624c;
+  background: rgba(201, 98, 76, 0.12);
+}
+
+.lineup-member-class {
+  font-size: 22px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- Slide 5: 专精分数排行（40专精表格） --- */
+.faith-table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.faith-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.faith-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 8px 14px;
+  transition: border-color 0.15s;
+}
+
+.faith-cell:hover {
+  border-color: rgba(201, 168, 76, 0.25);
+}
+
+.faith-cell-empty {
+  visibility: hidden;
+}
+
+.faith-rank {
+  font-size: 12px;
   color: var(--text-muted);
-  letter-spacing: 3px;
-  margin-top: 8px;
+  min-width: 24px;
+  font-weight: 600;
+}
+
+.faith-name {
+  font-size: 16px;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.faith-score {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gold-light);
+  font-variant-numeric: tabular-nums;
 }
 
 /* --- 导航 --- */
@@ -440,6 +587,512 @@ html, body {
   align-items: center;
 }
 
+/* --- 副本限时列表 --- */
+.dungeon-list {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dungeon-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 22px 36px;
+}
+
+.dungeon-name {
+  font-size: 24px;
+  color: var(--text-primary);
+  letter-spacing: 2px;
+}
+
+.dungeon-level-num {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--gold-light);
+}
+
+.dungeon-level-suffix {
+  font-size: 20px;
+  color: var(--text-secondary);
+  margin-left: 4px;
+}
+
+/* --- Slide 1 标题 + 赛季信息 --- */
+.s1-title {
+  font-size: 56px;
+  font-weight: 800;
+  color: var(--gold-light);
+  letter-spacing: 12px;
+  text-shadow: 0 0 50px rgba(201, 168, 76, 0.2);
+  margin-bottom: 16px;
+}
+.s1-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  padding: 8px 24px;
+  font-size: 15px;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+  margin-bottom: 48px;
+}
+.s1-meta .s1-sep {
+  color: var(--text-muted);
+  opacity: 0.4;
+}
+
+/* --- 主题切换栏 --- */
+.theme-bar {
+  position: fixed;
+  top: 14px;
+  right: 24px;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 6px 12px;
+}
+.theme-bar-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  margin-right: 2px;
+}
+.theme-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+  flex-shrink: 0;
+}
+.theme-btn:hover {
+  transform: scale(1.2);
+}
+.theme-btn.active {
+  border-color: #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+}
+
+/* --- 导航分隔线与一图流按钮 --- */
+.nav-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-onepager {
+  background: rgba(201, 168, 76, 0.12);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: var(--gold);
+  font-size: 13px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+.btn-onepager:hover {
+  background: rgba(201, 168, 76, 0.22);
+  border-color: rgba(201, 168, 76, 0.5);
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.15);
+}
+
+/* ============================================
+   一图流模式 — 垂直长图分享
+   ============================================ */
+
+/* 一图流模式：body 可滚动，隐藏导航和幻灯片 */
+body.one-pager-mode {
+  overflow: auto !important;
+}
+body.one-pager-mode .nav {
+  display: none;
+}
+body.one-pager-mode #slides-container {
+  display: none;
+}
+
+/* 一图流容器 */
+#one-pager {
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 50% 0%, var(--gold) 0%, transparent 60%),
+              linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-surface) 100%);
+  background-blend-mode: overlay;
+}
+body.one-pager-mode #one-pager {
+  display: block;
+}
+
+/* 一图流内容区 — 固定宽居中，模拟手机长图 */
+.op-container {
+  width: 800px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+
+/* 一图流各模块卡片 */
+.op-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 16px;
+  padding: 32px 36px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(8px);
+}
+
+.op-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.12);
+}
+
+/* --- 页头：赛季信息 --- */
+.op-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.op-header-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--gold-light);
+  letter-spacing: 8px;
+  margin-bottom: 4px;
+  text-shadow: 0 0 30px rgba(201, 168, 76, 0.15);
+}
+.op-header-season {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+.op-header-meta {
+  font-size: 15px;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+}
+.op-header-meta span {
+  margin: 0 12px;
+}
+.op-header-meta .sep {
+  color: var(--text-muted);
+}
+
+/* --- 分数总览（第一名 + 分数线） --- */
+.op-score-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+.op-score-card {
+  flex: 1;
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 24px 16px;
+}
+.op-score-card .op-score-value {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.op-score-card .op-score-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+}
+.op-score-card.accent-gold .op-score-value { color: var(--gold-light); }
+.op-score-card.accent-orange .op-score-value { color: var(--orange-light); }
+.op-score-card.accent-blue .op-score-value { color: #5a8fbf; }
+
+/* --- TOP5 队伍 --- */
+.op-top5-row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.op-top5-card {
+  flex: 1;
+  max-width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 20px 12px;
+}
+.op-top5-card .op-top5-role {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  letter-spacing: 1px;
+}
+.op-top5-card .op-top5-name {
+  font-size: 14px;
+  color: var(--text-primary);
+  text-align: center;
+  word-break: break-all;
+}
+.op-top5-card.role-tank { border-color: rgba(228, 170, 90, 0.3); }
+.op-top5-card.role-tank .op-top5-role { color: #e4aa5a; background: rgba(228, 170, 90, 0.12); }
+.op-top5-card.role-healer { border-color: rgba(130, 200, 120, 0.3); }
+.op-top5-card.role-healer .op-top5-role { color: #82c878; background: rgba(130, 200, 120, 0.12); }
+.op-top5-card.role-dps { border-color: rgba(201, 98, 76, 0.3); }
+.op-top5-card.role-dps .op-top5-role { color: #c9624c; background: rgba(201, 98, 76, 0.12); }
+
+/* --- 强势阵容（2套） --- */
+.op-lineup-row {
+  display: flex;
+  gap: 20px;
+}
+.op-lineup-group {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 20px 20px;
+}
+.op-lineup-group-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gold-light);
+  text-align: center;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+}
+.op-lineup-member {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: var(--bg-card);
+}
+.op-lineup-member:last-child { margin-bottom: 0; }
+.op-lineup-role {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 5px;
+  min-width: 40px;
+  text-align: center;
+}
+.op-lineup-role.role-tank { color: #e4aa5a; background: rgba(228, 170, 90, 0.12); }
+.op-lineup-role.role-healer { color: #82c878; background: rgba(130, 200, 120, 0.12); }
+.op-lineup-role.role-dps { color: #c9624c; background: rgba(201, 98, 76, 0.12); }
+.op-lineup-class {
+  font-size: 16px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --- 专精排行（4列） --- */
+.op-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+.op-spec-cell {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 6px;
+  padding: 4px 7px;
+  min-width: 0;
+}
+.op-spec-rank {
+  font-size: 10px;
+  color: var(--text-muted);
+  min-width: 18px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.op-spec-name {
+  font-size: 12px;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.op-spec-score {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold-light);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+/* --- 副本限时 --- */
+.op-dungeon-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.op-dungeon-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  padding: 14px 24px;
+}
+.op-dungeon-name {
+  font-size: 17px;
+  color: var(--text-primary);
+  letter-spacing: 1px;
+}
+.op-dungeon-level {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--gold-light);
+}
+.op-dungeon-level-suffix {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-left: 3px;
+}
+
+/* --- 铁钥匙人数 --- */
+.op-iron-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+.op-iron-card {
+  flex: 1;
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 28px 20px;
+}
+.op-iron-value {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.op-iron-value.gold { color: var(--gold-light); }
+.op-iron-value.orange { color: var(--orange-light); }
+.op-iron-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+}
+
+/* --- 页脚（幻灯片模式固定底部） --- */
+.card-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 10px 24px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(201, 168, 76, 0.12);
+}
+
+.card-footer .footer-brand {
+  font-size: 13px;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+}
+
+.card-footer .footer-social {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.card-footer .footer-social .hl {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* 一图流模式下隐藏固定页脚，使用一图流专用页脚 */
+body.one-pager-mode .card-footer {
+  display: none;
+}
+
+/* --- 一图流页脚 --- */
+.op-footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-card);
+}
+
+/* --- 一图流浮动返回按钮 --- */
+.op-back-btn {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  background: rgba(201, 168, 76, 0.15);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  color: var(--gold);
+  font-size: 13px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all 0.25s;
+  backdrop-filter: blur(8px);
+}
+.op-back-btn:hover {
+  background: rgba(201, 168, 76, 0.25);
+  border-color: rgba(201, 168, 76, 0.55);
+  box-shadow: 0 0 16px rgba(201, 168, 76, 0.2);
+}
+
 /* --- 键盘提示 --- */
 .key-hint {
   position: fixed;
@@ -451,4 +1104,41 @@ html, body {
   letter-spacing: 1px;
   opacity: 0;
   transition: opacity 1s;
+}
+
+/* ============================================
+   主题微调
+   ============================================ */
+
+/* 极简白昼：关闭径向渐变，纯色背景 */
+[data-theme="light"] .slide,
+[data-theme="light"] #one-pager {
+  background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-surface) 100%);
+}
+
+/* 赛博朋克：卡片发光边框 */
+[data-theme="cyber"] .op-section {
+  border-color: rgba(0, 255, 200, 0.15);
+  box-shadow: 0 0 30px rgba(0, 255, 200, 0.03), inset 0 0 30px rgba(0, 255, 200, 0.01);
+}
+[data-theme="cyber"] .op-spec-cell {
+  border-color: rgba(0, 255, 200, 0.08);
+}
+
+/* 羊皮古卷：增加卡片厚重感 */
+[data-theme="parchment"] .op-section {
+  border-width: 2px;
+  border-style: double;
+}
+[data-theme="parchment"] .op-section-title {
+  font-style: italic;
+}
+
+/* 现代暗黑：卡片无圆角，更硬朗 */
+[data-theme="mono"] .op-section,
+[data-theme="mono"] .stat-card {
+  border-radius: 2px;
+}
+[data-theme="mono"] .op-spec-cell {
+  border-radius: 0;
 }

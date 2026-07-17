@@ -13,7 +13,7 @@ const darkTheme = {
 
 /**
  * 初始化分数行情趋势图（Slide 2）
- * 第一名分数 / 1%分数 / 0.1%分数 三条折线
+ * 最高分数 / 1%分数 / 0.1%分数 三条折线
  */
 function initScoreTrendChart() {
   const dom = document.getElementById('chart-score-trend');
@@ -31,6 +31,14 @@ function initScoreTrendChart() {
   if (!reportData || !reportData.daily.length) return;
 
   const dates = reportData.daily.map(d => d.date.substring(4, 8));
+  const lastIdx = reportData.daily.length - 1;
+
+  /** 构建带最新值高亮的数据数组 */
+  function makeHighlightData(values, normalSize, hlSize) {
+    return values.map((v, i) => i === lastIdx
+      ? { value: v, symbolSize: hlSize, itemStyle: { shadowBlur: 16, shadowColor: 'rgba(228, 199, 107, 0.5)' } }
+      : v);
+  }
 
   const option = {
     ...darkTheme,
@@ -59,9 +67,9 @@ function initScoreTrendChart() {
     },
     series: [
       {
-        name: '第一名分数',
+        name: '最高分数',
         type: 'line',
-        data: reportData.daily.map(d => d.rank1.score),
+        data: makeHighlightData(reportData.daily.map(d => d.rank1.score), 10, 18),
         lineStyle: { color: '#e4c76b', width: 3 },
         itemStyle: { color: '#e4c76b' },
         symbol: 'circle',
@@ -71,7 +79,7 @@ function initScoreTrendChart() {
       {
         name: '0.1%分数',
         type: 'line',
-        data: reportData.daily.map(d => d.top01Pct),
+        data: makeHighlightData(reportData.daily.map(d => d.top01Pct), 8, 14),
         lineStyle: { color: '#d4783b', width: 2, type: 'dashed' },
         itemStyle: { color: '#d4783b' },
         symbol: 'diamond',
@@ -81,81 +89,12 @@ function initScoreTrendChart() {
       {
         name: '1%分数',
         type: 'line',
-        data: reportData.daily.map(d => d.top1Pct),
+        data: makeHighlightData(reportData.daily.map(d => d.top1Pct), 8, 14),
         lineStyle: { color: '#5a8fbf', width: 2 },
         itemStyle: { color: '#5a8fbf' },
         symbol: 'triangle',
         symbolSize: 8,
         label: { show: true, color: '#5a8fbf', fontSize: 14, position: 'bottom' }
-      }
-    ]
-  };
-
-  chart.setOption(option, true);
-  chart.resize();
-}
-
-/**
- * 初始化国家队生态环形图（Slide 4）
- */
-function initPieChart() {
-  const dom = document.getElementById('chart-pie');
-  if (!dom) return;
-
-  let chart = dom._echartInstance;
-  if (!chart) {
-    chart = echarts.init(dom);
-    dom._echartInstance = chart;
-    window.addEventListener('resize', () => chart.resize());
-  }
-
-  if (!reportData) return;
-  const l = reportData.daily[reportData.daily.length - 1];
-  if (!l) return;
-
-  const option = {
-    ...darkTheme,
-    tooltip: {
-      trigger: 'item',
-      backgroundColor: 'rgba(17, 24, 39, 0.95)',
-      borderColor: 'rgba(201, 168, 76, 0.3)',
-      textStyle: { color: '#f0f0f0', fontSize: 18 },
-      formatter: '{b}: {c}%'
-    },
-    series: [
-      {
-        name: '生态占比',
-        type: 'pie',
-        radius: ['55%', '78%'],
-        center: ['50%', '52%'],
-        avoidLabelOverlap: false,
-        itemStyle: {
-          borderRadius: 6,
-          borderColor: '#0a0e17',
-          borderWidth: 4
-        },
-        label: {
-          show: true,
-          position: 'outside',
-          color: '#8892a4',
-          fontSize: 18,
-          formatter: '{b}\n{d}%'
-        },
-        emphasis: {
-          label: { fontSize: 22, fontWeight: 'bold' }
-        },
-        data: [
-          {
-            value: parseFloat((l.nationalTeamRatio * 100).toFixed(1)),
-            name: '国家队',
-            itemStyle: { color: '#c9a84c' }
-          },
-          {
-            value: parseFloat((l.nonNationalRatio * 100).toFixed(1)),
-            name: '非国家队',
-            itemStyle: { color: '#d4783b' }
-          }
-        ]
       }
     ]
   };
@@ -267,6 +206,13 @@ function initIronChart() {
   if (!reportData || !reportData.daily.length) return;
 
   const dates = reportData.daily.map(d => d.date.substring(4, 8));
+  const lastIdx2 = reportData.daily.length - 1;
+
+  function makeHighlightData(values) {
+    return values.map((v, i) => i === lastIdx2
+      ? { value: v, symbolSize: 18, itemStyle: { shadowBlur: 16, shadowColor: 'rgba(228, 199, 107, 0.5)' } }
+      : v);
+  }
 
   const option = {
     ...darkTheme,
@@ -284,28 +230,18 @@ function initIronChart() {
       axisLabel: { color: '#8892a4', fontSize: 16 },
       axisTick: { show: false }
     },
-    yAxis: [
-      {
-        type: 'value',
-        name: '24铁人数',
-        nameTextStyle: { color: '#e4c76b', fontSize: 14 },
-        axisLabel: { color: '#8892a4', fontSize: 16 },
-        splitLine: { lineStyle: { color: 'rgba(255,255,255,0.04)' } }
-      },
-      {
-        type: 'value',
-        name: '23铁人数',
-        nameTextStyle: { color: '#d4783b', fontSize: 14 },
-        axisLabel: { color: '#8892a4', fontSize: 16 },
-        splitLine: { show: false }
-      }
-    ],
+    yAxis: {
+      type: 'value',
+      name: '人数',
+      nameTextStyle: { color: '#8892a4', fontSize: 14 },
+      axisLabel: { color: '#8892a4', fontSize: 16 },
+      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.04)' } }
+    },
     series: [
       {
         name: '24铁人数',
         type: 'line',
-        yAxisIndex: 0,
-        data: reportData.daily.map(d => d.iron24),
+        data: makeHighlightData(reportData.daily.map(d => d.iron24)),
         lineStyle: { color: '#e4c76b', width: 3 },
         itemStyle: { color: '#e4c76b' },
         symbol: 'circle',
@@ -315,8 +251,7 @@ function initIronChart() {
       {
         name: '23铁人数',
         type: 'line',
-        yAxisIndex: 1,
-        data: reportData.daily.map(d => d.iron23),
+        data: makeHighlightData(reportData.daily.map(d => d.iron23)),
         lineStyle: { color: '#d4783b', width: 3 },
         itemStyle: { color: '#d4783b' },
         symbol: 'diamond',
