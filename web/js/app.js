@@ -44,6 +44,21 @@ function showName(name) {
   return name.replace(/^[DHT]/, '');
 }
 
+/**
+ * 根据专精名中的 T/H/D 前缀判断角色职责
+ * @param {string} className - 带前缀的专精名（如 T熊T、H奶僧、D增辉）
+ * @returns {{role: string, roleClass: string}} role 为中文职责名，roleClass 为 CSS 类名
+ */
+function getRoleFromClass(className) {
+  if (!className) return { role: '输出', roleClass: 'dps' };
+  const prefix = className.charAt(0);
+  switch (prefix) {
+    case 'T': return { role: '坦克', roleClass: 'tank' };
+    case 'H': return { role: '治疗', roleClass: 'healer' };
+    default: return { role: '输出', roleClass: 'dps' };
+  }
+}
+
 const SLIDE_IDS = [
   'slide-1', 'slide-2', 'slide-3', 'slide-4',
   'slide-5', 'slide-6', 'slide-7'
@@ -133,19 +148,20 @@ function renderRank1() {
 
   document.getElementById('r1-score').textContent = l.rank1.score;
 
-  const roles = ['坦克', '治疗', '输出', '输出', '输出'];
-  const roleClasses = ['tank', 'healer', 'dps', 'dps', 'dps'];
   const roleIcons = { '坦克': '🛡️', '治疗': '💚', '输出': '⚔️' };
 
   const teamEl = document.getElementById('r1-team');
   teamEl.innerHTML = l.rank1.team
-    .map((member, i) => `
-      <div class="team-card team-${roleClasses[i]}">
-        <span class="team-role-badge">${roleIcons[roles[i]]} ${roles[i]}</span>
-        <span class="team-player-icon">${iconImg(member.class, 'icon-md')}</span>
-        <span class="team-player-name">${member.player}</span>
-      </div>
-    `)
+    .map(member => {
+      const { role, roleClass } = getRoleFromClass(member.class);
+      return `
+        <div class="team-card team-${roleClass}">
+          <span class="team-role-badge">${roleIcons[role]} ${role}</span>
+          <span class="team-player-icon">${iconImg(member.class, 'icon-md')}</span>
+          <span class="team-player-name">${member.player}</span>
+        </div>
+      `;
+    })
     .join('');
 }
 
@@ -302,8 +318,6 @@ function renderOnePager() {
   const mmdd = dateStr.substring(4, 6) + '/' + dateStr.substring(6, 8);
 
   // 队伍角色辅助
-  const roles = ['坦克', '治疗', '输出', '输出', '输出'];
-  const roleClasses = ['tank', 'healer', 'dps', 'dps', 'dps'];
   const roleIcons = { '坦克': '🛡️', '治疗': '💚', '输出': '⚔️' };
 
   // 副本颜色
@@ -354,17 +368,20 @@ function renderOnePager() {
         </div>
       </div>
 
-      <!-- TOP5 队伍 -->
+      <!-- TOP 队伍 -->
       <div class="op-section">
-        <div class="op-section-title">世界TOP5</div>
+        <div class="op-section-title">世界TOP</div>
         <div class="op-top5-row">
-          ${l.rank1.team.map((member, i) => `
-            <div class="op-top5-card role-${roleClasses[i]}">
-              <span class="op-top5-role">${roleIcons[roles[i]]} ${roles[i]}</span>
-              ${iconImg(member.class, 'icon-sm')}
-              <span class="op-top5-name">${member.player}</span>
-            </div>
-          `).join('')}
+          ${l.rank1.team.map(member => {
+            const { role, roleClass } = getRoleFromClass(member.class);
+            return `
+              <div class="op-top5-card role-${roleClass}">
+                <span class="op-top5-role">${roleIcons[role]} ${role}</span>
+                ${iconImg(member.class, 'icon-sm')}
+                <span class="op-top5-name">${member.player}</span>
+              </div>
+            `;
+          }).join('')}
         </div>
       </div>
 
