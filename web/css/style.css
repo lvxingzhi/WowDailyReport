@@ -396,18 +396,22 @@ html, body {
 
 .lineup-members {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
 }
 
 .lineup-member-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: 12px;
-  padding: 14px 24px;
+  padding: 16px 20px;
+  min-width: 100px;
   transition: border-color 0.2s;
 }
 
@@ -441,11 +445,15 @@ html, body {
 }
 
 .lineup-member-class {
-  font-size: 22px;
-  color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+}
+
+.lineup-member-name {
+  font-size: 16px;
+  color: var(--text-primary);
+  font-weight: 500;
 }
 
 /* --- Slide 5: 专精分数排行（40专精表格） --- */
@@ -880,6 +888,15 @@ body.one-pager-mode #one-pager {
   border: 1px solid var(--border-card);
   border-radius: 12px;
   padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+}
+.op-lineup-group .op-lineup-members-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
 }
 .op-lineup-group-title {
   font-size: 16px;
@@ -893,12 +910,14 @@ body.one-pager-mode #one-pager {
 }
 .op-lineup-member {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
+  gap: 6px;
+  padding: 10px 12px;
   border-radius: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 0;
   background: var(--bg-card);
+  min-width: 70px;
 }
 .op-lineup-member:last-child { margin-bottom: 0; }
 .op-lineup-role {
@@ -913,11 +932,15 @@ body.one-pager-mode #one-pager {
 .op-lineup-role.role-healer { color: #82c878; background: rgba(130, 200, 120, 0.12); }
 .op-lineup-role.role-dps { color: #c9624c; background: rgba(201, 98, 76, 0.12); }
 .op-lineup-class {
-  font-size: 16px;
-  color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+}
+
+.op-lineup-name {
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
 }
 
 /* --- 专精排行（4列） --- */

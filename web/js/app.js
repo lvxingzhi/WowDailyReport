@@ -185,11 +185,12 @@ function renderEco() {
       <div class="lineup-members">
         ${group.members.map(m => `
           <div class="lineup-member-card">
+            <div class="lineup-member-class">
+              ${iconImg(m.class, 'icon-md')}
+            </div>
+            <div class="lineup-member-name">${showName(m.class)}</div>
             <div class="lineup-member-role ${m.role === '坦克' ? 'role-tank' : m.role === '治疗' ? 'role-healer' : 'role-dps'}">
               ${roleIcons[m.role] || ''} ${m.role}
-            </div>
-            <div class="lineup-member-class">
-              ${iconImg(m.class, 'icon-md')}${showName(m.class)}
             </div>
           </div>
         `).join('')}
@@ -392,12 +393,15 @@ function renderOnePager() {
           ${reportData.nationalTeam.map(group => `
             <div class="op-lineup-group">
               <div class="op-lineup-group-title">${group.group}</div>
+              <div class="op-lineup-members-row">
               ${group.members.map(m => `
                 <div class="op-lineup-member">
+                  <span class="op-lineup-class">${iconImg(m.class, 'icon-sm')}</span>
+                  <span class="op-lineup-name">${showName(m.class)}</span>
                   <span class="op-lineup-role ${m.role === '坦克' ? 'role-tank' : m.role === '治疗' ? 'role-healer' : 'role-dps'}">${roleIcons[m.role] || ''} ${m.role}</span>
-                  <span class="op-lineup-class">${iconImg(m.class, 'icon-sm')}${showName(m.class)}</span>
                 </div>
               `).join('')}
+              </div>
             </div>
           `).join('')}
         </div>
