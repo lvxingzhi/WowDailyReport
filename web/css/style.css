@@ -1,126 +1,79 @@
 /* ============================================
-   大秘境分数行情 · 幻灯片信息图样式
-   暗色魔兽风主题，16:9 比例
+   今日一报 · Neo-brutalism 设计系统
+   基于 Neo-brutalism 风格：硬边框、偏移阴影、高饱和色彩
    @author ext.ahs.lvxingz1
    ============================================ */
 
-/* --- 基础重置 --- */
+/* --- Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=block');
+
+/* ============================================
+   CSS 变量（Design Tokens）
+   ============================================ */
+:root {
+  /* 色彩 */
+  --neo-cream: #FFFDF5;
+  --neo-black: #000000;
+  --neo-white: #FFFFFF;
+  --neo-red: #FF6B6B;
+  --neo-yellow: #FFD93D;
+  --neo-violet: #C4B5FD;
+
+  /* 阴影（硬阴影，零模糊） */
+  --shadow-sm: 4px 4px 0px 0px #000000;
+  --shadow-md: 8px 8px 0px 0px #000000;
+  --shadow-lg: 12px 12px 0px 0px #000000;
+  --shadow-xl: 16px 16px 0px 0px #000000;
+
+  /* 边框 */
+  --border: 4px solid #000000;
+  --border-thin: 2px solid #000000;
+  --border-thick: 6px solid #000000;
+
+  /* 字体 */
+  --font: 'Space Grotesk', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+
+  /* 幻灯片尺寸 */
+  --slide-w: 1920px;
+  --slide-h: 1080px;
+}
+
+/* ============================================
+   基础重置
+   ============================================ */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-:root {
-  --bg-deep: #0a0e17;
-  --bg-surface: #111827;
-  --bg-card: rgba(255, 255, 255, 0.04);
-  --border-card: rgba(201, 168, 76, 0.15);
-  --gold: #c9a84c;
-  --gold-light: #e4c76b;
-  --orange: #d4783b;
-  --orange-light: #f0a05a;
-  --red: #c94c4c;
-  --text-primary: #f0f0f0;
-  --text-secondary: #8892a4;
-  --text-muted: #5a6377;
-  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  --slide-width: 1920px;
-  --slide-height: 1080px;
-  --safe-pad-y: 5%;
-  --safe-pad-x: 8%;
-}
-
-/* ============================================
-   主题 1：经典暗金 — 魔兽世界原版暗色调
-   ============================================ */
-/* :root 即为默认，无需额外 data-theme 定义 */
-
-
-/* ============================================
-   主题 2：极简白昼 — 高对比白底，杂志/信息图风格
-   ============================================ */
-[data-theme="light"] {
-  --bg-deep: #f5f5f0;
-  --bg-surface: #ffffff;
-  --bg-card: rgba(0, 0, 0, 0.02);
-  --border-card: rgba(0, 0, 0, 0.08);
-  --gold: #b8935a;
-  --gold-light: #8a6d3b;
-  --orange: #c06030;
-  --orange-light: #d4783b;
-  --red: #c04040;
-  --text-primary: #1a1a1a;
-  --text-secondary: #666666;
-  --text-muted: #999999;
-}
-
-/* ============================================
-   主题 3：赛博朋克 — 霓虹暗空，发光边框
-   ============================================ */
-[data-theme="cyber"] {
-  --bg-deep: #020408;
-  --bg-surface: #080e18;
-  --bg-card: rgba(0, 255, 200, 0.03);
-  --border-card: rgba(0, 255, 200, 0.12);
-  --gold: #00ffc8;
-  --gold-light: #40ffd8;
-  --orange: #ff4088;
-  --orange-light: #ff6aa0;
-  --red: #ff2040;
-  --text-primary: #d0f0e0;
-  --text-secondary: #608878;
-  --text-muted: #304840;
-}
-
-/* ============================================
-   主题 4：羊皮古卷 — 暖黄卷轴，魔兽任务日志质感
-   ============================================ */
-[data-theme="parchment"] {
-  --bg-deep: #2a2218;
-  --bg-surface: #352d22;
-  --bg-card: rgba(180, 140, 80, 0.08);
-  --border-card: rgba(180, 140, 80, 0.18);
-  --gold: #d4a84c;
-  --gold-light: #e8c478;
-  --orange: #c08040;
-  --orange-light: #d49860;
-  --red: #a05030;
-  --text-primary: #e8dcc8;
-  --text-secondary: #a09078;
-  --text-muted: #706048;
-  --font-ui: "Palatino", "Georgia", "STSong", "SimSun", serif;
-}
-
-/* ============================================
-   主题 5：现代暗黑 — 纯粹深黑，冷灰高亮，无暖色
-   ============================================ */
-[data-theme="mono"] {
-  --bg-deep: #000000;
-  --bg-surface: #0a0a0a;
-  --bg-card: rgba(255, 255, 255, 0.03);
-  --border-card: rgba(255, 255, 255, 0.06);
-  --gold: #909090;
-  --gold-light: #b0b0b0;
-  --orange: #707070;
-  --orange-light: #909090;
-  --red: #606060;
-  --text-primary: #d0d0d0;
-  --text-secondary: #707070;
-  --text-muted: #404040;
-}
-
 html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--bg-deep);
-  color: var(--text-primary);
-  font-family: var(--font-ui);
+  background: var(--neo-cream);
+  color: var(--neo-black);
+  font-family: var(--font);
   -webkit-font-smoothing: antialiased;
 }
 
-/* --- 幻灯片容器 --- */
+/* ============================================
+   背景纹理（Halftone 网点）
+   ============================================ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(#000000 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.04;
+}
+
+/* ============================================
+   幻灯片容器
+   ============================================ */
 #slides-container {
   width: 100vw;
   height: 100vh;
@@ -135,10 +88,8 @@ html, body {
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.35s ease;
-  background: radial-gradient(ellipse at 50% 0%, var(--gold) 0%, transparent 60%),
-              linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-surface) 100%);
-  background-blend-mode: overlay;
+  transition: opacity 0.2s ease-linear;
+  background: var(--neo-cream);
 }
 
 .slide.active {
@@ -148,142 +99,271 @@ html, body {
 
 .slide-content {
   width: 84%;
-  height: 90%;
+  height: 88%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
+/* ============================================
+   幻灯片标签
+   ============================================ */
 .slide-label {
-  font-size: 18px;
-  color: var(--gold);
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--neo-black);
   text-transform: uppercase;
   letter-spacing: 6px;
-  margin-bottom: 36px;
-  opacity: 0.7;
+  background: var(--neo-yellow);
+  border: var(--border);
+  padding: 10px 28px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 40px;
+  /* 贴纸旋转 */
+  transform: rotate(-1deg);
 }
 
-/* --- 卡片组件 --- */
-.stat-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 16px;
-  padding: 28px 40px;
+.slide-label:hover {
+  transform: rotate(2deg);
+  transition: transform 0.2s ease-out;
+}
+
+/* ============================================
+   卡片组件（Neo-brutalism 核心）
+   ============================================ */
+.neo-card {
+  background: var(--neo-white);
+  border: var(--border);
+  box-shadow: var(--shadow-md);
+  padding: 32px 40px;
   text-align: center;
-  min-width: 180px;
-  backdrop-filter: blur(8px);
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 
-.stat-card.large {
-  padding: 40px 56px;
-  min-width: 240px;
+.neo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 12px 12px 0px 0px #000000;
 }
 
-.stat-value {
-  font-size: 56px;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.1;
+.neo-card.neo-card-large {
+  padding: 48px 60px;
+  box-shadow: var(--shadow-lg);
+}
+
+.neo-card.neo-card-accent {
+  background: var(--neo-yellow);
+}
+
+.neo-card.neo-card-red {
+  background: var(--neo-red);
+  color: var(--neo-white);
+}
+
+.neo-card.neo-card-violet {
+  background: var(--neo-violet);
+}
+
+/* 卡片内的数值 */
+.neo-value {
+  font-size: 64px;
+  font-weight: 900;
+  color: var(--neo-black);
+  line-height: 1;
   margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
 }
 
-.stat-value.accent-warn { color: var(--orange); }
-.stat-value.accent-gold { color: var(--gold); }
-.stat-value.accent-orange { color: var(--orange-light); }
+.neo-value.neo-giant {
+  font-size: 140px;
+}
 
-.stat-label {
+.neo-value.neo-accent {
+  color: var(--neo-red);
+}
+
+.neo-value.neo-yellow {
+  color: var(--neo-yellow);
+  -webkit-text-stroke: 2px #000000;
+}
+
+/* 卡片内的标签 */
+.neo-label {
   font-size: 18px;
-  color: var(--text-secondary);
+  font-weight: 700;
+  color: var(--neo-black);
+  text-transform: uppercase;
   letter-spacing: 2px;
 }
 
-/* --- Slide 1: 赛季概览 --- */
+/* ============================================
+   Slide 1: 赛季概览
+   ============================================ */
 .season-overview {
   text-align: center;
   width: 100%;
 }
 
+/* 标题 - 贴纸风大字 */
+.s1-title {
+  font-size: 80px;
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 3px #000000;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 20px;
+  transform: rotate(-0.5deg);
+}
+
+/* 标题下方双色块 */
+.s1-title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 60px;
+}
+
+.s1-title-bar .s1-title-solid {
+  font-size: 80px;
+  font-weight: 900;
+  color: var(--neo-black);
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  line-height: 1;
+  background: var(--neo-yellow);
+  border: var(--border);
+  padding: 8px 32px;
+  box-shadow: var(--shadow-md);
+  transform: rotate(0.5deg);
+}
+
+/* 赛季元信息 */
 .season-meta {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 32px;
-  margin-bottom: 48px;
+  gap: 20px;
+  margin-bottom: 56px;
+  flex-wrap: wrap;
 }
 
-.season-title {
-  font-size: 32px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  letter-spacing: 3px;
+.season-meta-tag {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--neo-black);
+  background: var(--neo-white);
+  border: var(--border);
+  padding: 10px 24px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: var(--shadow-sm);
+  transform: rotate(-0.5deg);
 }
 
-.season-date {
-  font-size: 18px;
-  color: var(--text-muted);
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 8px;
-  padding: 6px 18px;
+.season-meta-tag:nth-child(2) {
+  transform: rotate(1deg);
+  background: var(--neo-violet);
 }
 
+.season-meta-tag:nth-child(3) {
+  transform: rotate(-1deg);
+  background: var(--neo-red);
+  color: var(--neo-white);
+}
+
+.season-meta-sep {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--neo-black);
+}
+
+/* Hero 数字区 */
 .season-hero {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 60px;
+  gap: 80px;
 }
 
 .hero-card {
   text-align: center;
+  background: var(--neo-white);
+  border: var(--border);
+  padding: 40px 64px;
+  box-shadow: var(--shadow-lg);
+  transform: rotate(-1deg);
+}
+
+.hero-card.hero-accent {
+  background: var(--neo-red);
+  transform: rotate(1.5deg);
 }
 
 .hero-value {
-  font-size: 140px;
-  font-weight: 800;
-  color: var(--text-primary);
-  line-height: 1;
-  text-shadow: 0 0 40px rgba(201, 168, 76, 0.15);
+  font-size: 150px;
+  font-weight: 900;
+  color: var(--neo-black);
+  line-height: 0.9;
+  margin-bottom: 12px;
 }
 
-.hero-card.accent .hero-value {
-  color: var(--gold-light);
-  text-shadow: 0 0 60px rgba(201, 168, 76, 0.3);
+.hero-card.hero-accent .hero-value {
+  color: var(--neo-white);
+  -webkit-text-stroke: 3px #000000;
 }
 
 .hero-label {
-  font-size: 22px;
-  color: var(--text-secondary);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--neo-black);
+  text-transform: uppercase;
   letter-spacing: 4px;
-  margin-top: 12px;
+}
+
+.hero-card.hero-accent .hero-label {
+  color: var(--neo-white);
 }
 
 .hero-divider {
-  width: 2px;
-  height: 100px;
-  background: linear-gradient(180deg, transparent, rgba(201, 168, 76, 0.2), transparent);
+  width: 6px;
+  height: 120px;
+  background: var(--neo-black);
+  transform: rotate(2deg);
 }
 
-/* --- Slide 2/6/7: 图表通用 --- */
+/* ============================================
+   Slide 2: 图表通用
+   ============================================ */
 .chart-box {
   width: 100%;
   flex: 1;
   min-height: 0;
+  background: var(--neo-white);
+  border: var(--border);
+  box-shadow: var(--shadow-md);
+  padding: 16px;
 }
 
-.chart-box-half {
-  width: 60%;
+/* ============================================
+   Slide 3: 世界第一 + 限时最高层数
+   ============================================ */
+.slide-top-dungeon {
+  justify-content: flex-start;
+  padding-top: 40px;
 }
 
-/* --- Slide 3: 世界第一（5人小队） --- */
 .team-score {
-  font-size: 120px;
-  font-weight: 800;
-  color: var(--gold-light);
+  font-size: 100px;
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 3px #000000;
   line-height: 1;
-  text-shadow: 0 0 60px rgba(201, 168, 76, 0.3);
-  margin-bottom: 48px;
+  margin-bottom: 28px;
+  transform: rotate(-0.5deg);
 }
 
 .team-members {
@@ -291,6 +371,7 @@ html, body {
   gap: 24px;
   justify-content: center;
   align-items: stretch;
+  margin-bottom: 28px;
 }
 
 .team-card {
@@ -298,26 +379,68 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 16px;
+  background: var(--neo-white);
+  border: var(--border);
   padding: 28px 32px;
-  min-width: 160px;
-  backdrop-filter: blur(8px);
-  transition: border-color 0.2s;
+  min-width: 170px;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 
+.team-card:nth-child(1) { transform: rotate(-1.5deg); }
+.team-card:nth-child(2) { transform: rotate(0.5deg); }
+.team-card:nth-child(3) { transform: rotate(-0.5deg); }
+.team-card:nth-child(4) { transform: rotate(1deg); }
+.team-card:nth-child(5) { transform: rotate(-1deg); }
+
 .team-card:hover {
-  border-color: rgba(201, 168, 76, 0.3);
+  transform: translateY(-4px) rotate(0deg) !important;
+  box-shadow: var(--shadow-lg);
+}
+
+/* 坦克 */
+.team-card.team-tank {
+  border-color: #FF6B6B;
+  border-width: 4px;
+  background: #FFF0F0;
+}
+
+/* 治疗 */
+.team-card.team-healer {
+  border-color: #82C878;
+  border-width: 4px;
+  background: #F0FFF0;
+}
+
+/* 输出 */
+.team-card.team-dps {
+  border-color: #FFD93D;
+  border-width: 4px;
+  background: #FFFEF0;
 }
 
 .team-role-badge {
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 900;
   padding: 6px 16px;
-  border-radius: 8px;
+  border: var(--border);
   letter-spacing: 1px;
-  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.team-card.team-tank .team-role-badge {
+  background: #FF6B6B;
+  color: #FFFFFF;
+}
+
+.team-card.team-healer .team-role-badge {
+  background: #82C878;
+  color: #FFFFFF;
+}
+
+.team-card.team-dps .team-role-badge {
+  background: #FFD93D;
+  color: #000000;
 }
 
 .team-player-icon {
@@ -327,44 +450,16 @@ html, body {
 }
 
 .team-player-name {
-  font-size: 20px;
-  color: var(--text-primary);
-  font-weight: 500;
+  font-size: 18px;
+  color: var(--neo-black);
+  font-weight: 700;
   text-align: center;
   word-break: break-all;
 }
 
-/* 坦克 配色 */
-.team-card.team-tank {
-  border-color: rgba(228, 170, 90, 0.35);
-  background: rgba(228, 170, 90, 0.06);
-}
-.team-card.team-tank .team-role-badge {
-  color: #e4aa5a;
-  background: rgba(228, 170, 90, 0.15);
-}
-
-/* 治疗 配色 */
-.team-card.team-healer {
-  border-color: rgba(130, 200, 120, 0.35);
-  background: rgba(130, 200, 120, 0.06);
-}
-.team-card.team-healer .team-role-badge {
-  color: #82c878;
-  background: rgba(130, 200, 120, 0.15);
-}
-
-/* 输出 配色 */
-.team-card.team-dps {
-  border-color: rgba(201, 98, 76, 0.35);
-  background: rgba(201, 98, 76, 0.06);
-}
-.team-card.team-dps .team-role-badge {
-  color: #c9624c;
-  background: rgba(201, 98, 76, 0.15);
-}
-
-/* --- Slide 4: 强势阵容（2套阵容） --- */
+/* ============================================
+   Slide 4: 强势阵容（2套阵容）
+   ============================================ */
 .lineup-groups {
   display: flex;
   gap: 48px;
@@ -376,22 +471,34 @@ html, body {
 .lineup-group {
   flex: 1;
   max-width: 46%;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 20px;
+  background: var(--neo-white);
+  border: var(--border);
+  box-shadow: var(--shadow-lg);
   padding: 36px 40px;
-  backdrop-filter: blur(8px);
+}
+
+.lineup-group:first-child {
+  transform: rotate(-0.8deg);
+}
+
+.lineup-group:last-child {
+  transform: rotate(0.8deg);
 }
 
 .lineup-group-title {
   font-size: 24px;
-  font-weight: 700;
-  color: var(--gold-light);
+  font-weight: 900;
+  color: var(--neo-black);
   text-align: center;
   letter-spacing: 4px;
+  text-transform: uppercase;
+  background: var(--neo-yellow);
+  border: var(--border);
+  padding: 10px 24px;
   margin-bottom: 28px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  display: inline-block;
+  width: 100%;
+  box-shadow: var(--shadow-sm);
 }
 
 .lineup-members {
@@ -407,41 +514,42 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 12px;
+  background: var(--neo-white);
+  border: var(--border);
   padding: 16px 20px;
-  min-width: 100px;
-  transition: border-color 0.2s;
+  min-width: 105px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease-out;
 }
 
 .lineup-member-card:hover {
-  border-color: rgba(201, 168, 76, 0.2);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
 }
 
 .lineup-member-role {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 900;
   padding: 4px 12px;
-  border-radius: 6px;
+  border: var(--border-thin);
   letter-spacing: 1px;
-  min-width: 48px;
   text-align: center;
+  text-transform: uppercase;
 }
 
 .lineup-member-role.role-tank {
-  color: #e4aa5a;
-  background: rgba(228, 170, 90, 0.12);
+  background: #FF6B6B;
+  color: #FFFFFF;
 }
 
 .lineup-member-role.role-healer {
-  color: #82c878;
-  background: rgba(130, 200, 120, 0.12);
+  background: #82C878;
+  color: #FFFFFF;
 }
 
 .lineup-member-role.role-dps {
-  color: #c9624c;
-  background: rgba(201, 98, 76, 0.12);
+  background: #FFD93D;
+  color: #000000;
 }
 
 .lineup-member-class {
@@ -452,37 +560,68 @@ html, body {
 
 .lineup-member-name {
   font-size: 16px;
-  color: var(--text-primary);
-  font-weight: 500;
+  color: var(--neo-black);
+  font-weight: 700;
 }
 
-/* --- Slide 5: 专精分数排行（40专精表格） --- */
+/* ============================================
+   Slide 5: 专精分数排行（40专精表格）
+   ============================================ */
 .faith-table {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  background: var(--neo-white);
+  border: var(--border);
+  padding: 16px;
+  box-shadow: var(--shadow-md);
 }
 
 .faith-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
+  gap: 4px;
 }
 
 .faith-cell {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 8px;
+  background: var(--neo-cream);
+  border: var(--border-thin);
   padding: 8px 14px;
-  transition: border-color 0.15s;
+  transition: background 0.1s ease-out;
 }
 
 .faith-cell:hover {
-  border-color: rgba(201, 168, 76, 0.25);
+  background: var(--neo-yellow);
+}
+
+/* 低于称号线的专精 — 表示受不平衡待遇 */
+.faith-cell-weak {
+  background: #FFF0F0;
+  border-color: #FF6B6B;
+  border-style: dashed;
+  position: relative;
+}
+
+.faith-cell-weak::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 4px,
+    rgba(255, 107, 107, 0.08) 4px,
+    rgba(255, 107, 107, 0.08) 8px
+  );
+  pointer-events: none;
+}
+
+.faith-cell-weak:hover {
+  background: #FFE0E0;
 }
 
 .faith-cell-empty {
@@ -490,559 +629,214 @@ html, body {
 }
 
 .faith-rank {
-  font-size: 12px;
-  color: var(--text-muted);
-  min-width: 24px;
-  font-weight: 600;
+  font-size: 13px;
+  color: var(--neo-black);
+  min-width: 26px;
+  font-weight: 900;
 }
 
 .faith-name {
-  font-size: 16px;
-  color: var(--text-primary);
+  font-size: 15px;
+  color: var(--neo-black);
   flex: 1;
+  font-weight: 700;
 }
 
 .faith-score {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--gold-light);
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--neo-red);
   font-variant-numeric: tabular-nums;
 }
 
-/* --- 导航 --- */
-.nav {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  z-index: 100;
+/* 紧凑版限时最高层数（嵌入 Slide 3） */
+.dungeon-compact-title {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--neo-black);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
-.nav-arrow {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-secondary);
-  font-size: 16px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
+.dungeon-compact-list {
+  width: 84%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
 }
 
-.nav-arrow:hover {
-  background: rgba(201, 168, 76, 0.15);
-  border-color: rgba(201, 168, 76, 0.3);
-  color: var(--gold);
-}
-
-.nav-dots {
-  display: flex;
-  gap: 10px;
-}
-
-.nav-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  cursor: pointer;
-  transition: all 0.25s;
-}
-
-.nav-dot.active {
-  background: var(--gold);
-  box-shadow: 0 0 8px rgba(201, 168, 76, 0.4);
-}
-
-/* --- 键盘提示 --- */
-/* --- 专精图标 --- */
-.spec-icon {
-  display: inline-block;
-  vertical-align: middle;
-  border-radius: 4px;
-}
-
-.spec-icon.icon-sm {
-  width: 24px;
-  height: 24px;
-  margin-right: 6px;
-}
-
-.spec-icon.icon-md {
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
-}
-
-.spec-icon.icon-lg {
-  width: 56px;
-  height: 56px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-  border: 2px solid rgba(201, 168, 76, 0.3);
-}
-
-.lineup-class-tag {
-  display: inline-flex;
-  align-items: center;
-}
-
-/* --- 副本限时列表 --- */
-.dungeon-list {
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.dungeon-row {
+.dungeon-compact-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 12px;
-  padding: 22px 36px;
-}
-
-.dungeon-name {
-  font-size: 24px;
-  color: var(--text-primary);
-  letter-spacing: 2px;
-}
-
-.dungeon-level-num {
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--gold-light);
-}
-
-.dungeon-level-suffix {
-  font-size: 20px;
-  color: var(--text-secondary);
-  margin-left: 4px;
-}
-
-/* --- Slide 1 标题 + 赛季信息 --- */
-.s1-title {
-  font-size: 56px;
-  font-weight: 800;
-  color: var(--gold-light);
-  letter-spacing: 12px;
-  text-shadow: 0 0 50px rgba(201, 168, 76, 0.2);
-  margin-bottom: 16px;
-}
-.s1-meta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 10px;
-  padding: 8px 24px;
-  font-size: 15px;
-  color: var(--text-secondary);
-  letter-spacing: 2px;
-  margin-bottom: 48px;
-}
-.s1-meta .s1-sep {
-  color: var(--text-muted);
-  opacity: 0.4;
-}
-
-/* --- 主题切换栏 --- */
-.theme-bar {
-  position: fixed;
-  top: 14px;
-  right: 24px;
-  z-index: 300;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  padding: 6px 12px;
-}
-.theme-bar-label {
-  font-size: 11px;
-  color: var(--text-muted);
-  letter-spacing: 1px;
-  margin-right: 2px;
-}
-.theme-btn {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s;
-  padding: 0;
-  flex-shrink: 0;
-}
-.theme-btn:hover {
-  transform: scale(1.2);
-}
-.theme-btn.active {
-  border-color: #fff;
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
-}
-
-/* --- 导航分隔线与一图流按钮 --- */
-.nav-divider {
-  width: 1px;
-  height: 28px;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.btn-onepager {
-  background: rgba(201, 168, 76, 0.12);
-  border: 1px solid rgba(201, 168, 76, 0.3);
-  color: var(--gold);
-  font-size: 13px;
-  padding: 8px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  letter-spacing: 2px;
-  transition: all 0.25s;
-  white-space: nowrap;
-}
-.btn-onepager:hover {
-  background: rgba(201, 168, 76, 0.22);
-  border-color: rgba(201, 168, 76, 0.5);
-  box-shadow: 0 0 12px rgba(201, 168, 76, 0.15);
-}
-
-/* ============================================
-   一图流模式 — 垂直长图分享
-   ============================================ */
-
-/* 一图流模式：body 可滚动，隐藏导航和幻灯片 */
-body.one-pager-mode {
-  overflow: auto !important;
-}
-body.one-pager-mode .nav {
-  display: none;
-}
-body.one-pager-mode #slides-container {
-  display: none;
-}
-
-/* 一图流容器 */
-#one-pager {
-  display: none;
-  width: 100%;
-  min-height: 100vh;
-  background: radial-gradient(ellipse at 50% 0%, var(--gold) 0%, transparent 60%),
-              linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-surface) 100%);
-  background-blend-mode: overlay;
-}
-body.one-pager-mode #one-pager {
-  display: block;
-}
-
-/* 一图流内容区 — 固定宽居中，模拟手机长图 */
-.op-container {
-  width: 800px;
-  margin: 0 auto;
-  padding: 48px 40px 80px;
-}
-
-/* 一图流各模块卡片 */
-.op-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 16px;
-  padding: 32px 36px;
-  margin-bottom: 24px;
-  backdrop-filter: blur(8px);
-}
-
-.op-section-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--gold);
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  margin-bottom: 24px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.12);
-}
-
-/* --- 页头：赛季信息 --- */
-.op-header {
-  text-align: center;
-  margin-bottom: 32px;
-}
-.op-header-title {
-  font-size: 36px;
-  font-weight: 800;
-  color: var(--gold-light);
-  letter-spacing: 8px;
-  margin-bottom: 4px;
-  text-shadow: 0 0 30px rgba(201, 168, 76, 0.15);
-}
-.op-header-season {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: 4px;
-  margin-bottom: 8px;
-}
-.op-header-meta {
-  font-size: 15px;
-  color: var(--text-secondary);
-  letter-spacing: 1px;
-}
-.op-header-meta span {
-  margin: 0 12px;
-}
-.op-header-meta .sep {
-  color: var(--text-muted);
-}
-
-/* --- 分数总览（第一名 + 分数线） --- */
-.op-score-row {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-}
-.op-score-card {
-  flex: 1;
-  text-align: center;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 12px;
-  padding: 24px 16px;
-}
-.op-score-card .op-score-value {
-  font-size: 40px;
-  font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 6px;
-}
-.op-score-card .op-score-label {
-  font-size: 13px;
-  color: var(--text-secondary);
-  letter-spacing: 1px;
-}
-.op-score-card.accent-gold .op-score-value { color: var(--gold-light); }
-.op-score-card.accent-orange .op-score-value { color: var(--orange-light); }
-.op-score-card.accent-blue .op-score-value { color: #5a8fbf; }
-
-/* --- TOP5 队伍 --- */
-.op-top5-row {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-}
-.op-top5-card {
-  flex: 1;
-  max-width: 140px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 12px;
-  padding: 20px 12px;
-}
-.op-top5-card .op-top5-role {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 6px;
-  letter-spacing: 1px;
-}
-.op-top5-card .op-top5-name {
-  font-size: 14px;
-  color: var(--text-primary);
-  text-align: center;
-  word-break: break-all;
-}
-.op-top5-card.role-tank { border-color: rgba(228, 170, 90, 0.3); }
-.op-top5-card.role-tank .op-top5-role { color: #e4aa5a; background: rgba(228, 170, 90, 0.12); }
-.op-top5-card.role-healer { border-color: rgba(130, 200, 120, 0.3); }
-.op-top5-card.role-healer .op-top5-role { color: #82c878; background: rgba(130, 200, 120, 0.12); }
-.op-top5-card.role-dps { border-color: rgba(201, 98, 76, 0.3); }
-.op-top5-card.role-dps .op-top5-role { color: #c9624c; background: rgba(201, 98, 76, 0.12); }
-
-/* --- 强势阵容（2套） --- */
-.op-lineup-row {
-  display: flex;
-  gap: 20px;
-}
-.op-lineup-group {
-  flex: 1;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 12px;
-  padding: 20px 20px;
-  display: flex;
-  flex-direction: column;
-}
-.op-lineup-group .op-lineup-members-row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-}
-.op-lineup-group-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--gold-light);
-  text-align: center;
-  letter-spacing: 2px;
-  margin-bottom: 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.1);
-}
-.op-lineup-member {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background: var(--neo-white);
+  border: var(--border-thin);
+  padding: 8px 14px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.1s ease-out;
   gap: 6px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  margin-bottom: 0;
-  background: var(--bg-card);
-  min-width: 70px;
-}
-.op-lineup-member:last-child { margin-bottom: 0; }
-.op-lineup-role {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 2px 10px;
-  border-radius: 5px;
-  min-width: 40px;
-  text-align: center;
-}
-.op-lineup-role.role-tank { color: #e4aa5a; background: rgba(228, 170, 90, 0.12); }
-.op-lineup-role.role-healer { color: #82c878; background: rgba(130, 200, 120, 0.12); }
-.op-lineup-role.role-dps { color: #c9624c; background: rgba(201, 98, 76, 0.12); }
-.op-lineup-class {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.op-lineup-name {
-  font-size: 13px;
-  color: var(--text-primary);
-  font-weight: 500;
+.dungeon-compact-row:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
-/* --- 专精排行（4列） --- */
-.op-specs-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 4px;
-}
-.op-spec-cell {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 6px;
-  padding: 4px 7px;
-  min-width: 0;
-}
-.op-spec-rank {
-  font-size: 10px;
-  color: var(--text-muted);
-  min-width: 18px;
-  font-weight: 600;
-  flex-shrink: 0;
-}
-.op-spec-name {
-  font-size: 12px;
-  color: var(--text-primary);
-  flex: 1;
-  min-width: 0;
+.dungeon-compact-name {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--neo-black);
+  letter-spacing: 1px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.op-spec-score {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--gold-light);
-  font-variant-numeric: tabular-nums;
+
+.dungeon-compact-level {
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--neo-black);
+  line-height: 1;
   flex-shrink: 0;
 }
 
-/* --- 副本限时 --- */
-.op-dungeon-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.dungeon-compact-suffix {
+  font-size: 14px;
+  font-weight: 700;
 }
-.op-dungeon-row {
+
+/* ============================================
+   专精图标
+   ============================================ */
+.spec-icon {
+  display: inline-block;
+  vertical-align: middle;
+  border: var(--border-thin);
+}
+
+.spec-icon.icon-sm {
+  width: 26px;
+  height: 26px;
+  margin-right: 6px;
+}
+
+.spec-icon.icon-md {
+  width: 44px;
+  height: 44px;
+  margin-right: 10px;
+  border-width: 3px;
+}
+
+.spec-icon.icon-lg {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 12px;
+  border-width: 3px;
+}
+
+/* ============================================
+   导航
+   ============================================ */
+.nav {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 10px;
-  padding: 14px 24px;
-}
-.op-dungeon-name {
-  font-size: 17px;
-  color: var(--text-primary);
-  letter-spacing: 1px;
-}
-.op-dungeon-level {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--gold-light);
-}
-.op-dungeon-level-suffix {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-left: 3px;
+  gap: 14px;
+  z-index: 100;
+  background: var(--neo-white);
+  border: var(--border);
+  padding: 10px 20px;
+  box-shadow: var(--shadow-md);
 }
 
-/* --- 铁钥匙人数 --- */
-.op-iron-row {
+.nav-arrow {
+  background: var(--neo-white);
+  border: var(--border);
+  color: var(--neo-black);
+  font-size: 18px;
+  font-weight: 900;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
   display: flex;
-  gap: 20px;
+  align-items: center;
   justify-content: center;
-}
-.op-iron-card {
-  flex: 1;
-  text-align: center;
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 12px;
-  padding: 28px 20px;
-}
-.op-iron-value {
-  font-size: 48px;
-  font-weight: 800;
-  line-height: 1;
-  margin-bottom: 6px;
-}
-.op-iron-value.gold { color: var(--gold-light); }
-.op-iron-value.orange { color: var(--orange-light); }
-.op-iron-label {
-  font-size: 14px;
-  color: var(--text-secondary);
-  letter-spacing: 2px;
+  transition: all 0.1s ease-linear;
+  box-shadow: var(--shadow-sm);
 }
 
-/* --- 页脚（幻灯片模式固定底部） --- */
+.nav-arrow:hover {
+  background: var(--neo-yellow);
+}
+
+.nav-arrow:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.nav-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-dot {
+  width: 14px;
+  height: 14px;
+  border: var(--border);
+  background: var(--neo-white);
+  cursor: pointer;
+  transition: all 0.15s ease-linear;
+  padding: 0;
+}
+
+.nav-dot.active {
+  background: var(--neo-black);
+}
+
+.nav-dot:hover {
+  background: var(--neo-yellow);
+}
+
+/* 分隔线 */
+.nav-divider {
+  width: 3px;
+  height: 32px;
+  background: var(--neo-black);
+}
+
+/* 一图流按钮 */
+.btn-onepager {
+  background: var(--neo-violet);
+  border: var(--border);
+  color: var(--neo-black);
+  font-size: 14px;
+  font-weight: 900;
+  font-family: var(--font);
+  padding: 10px 20px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.1s ease-linear;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-onepager:hover {
+  background: var(--neo-yellow);
+}
+
+.btn-onepager:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+/* ============================================
+   页脚
+   ============================================ */
 .card-footer {
   position: fixed;
   bottom: 0;
@@ -1054,114 +848,587 @@ body.one-pager-mode #one-pager {
   justify-content: center;
   gap: 24px;
   padding: 10px 24px;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(6px);
-  border-top: 1px solid rgba(201, 168, 76, 0.12);
+  background: var(--neo-white);
+  border-top: var(--border);
 }
 
 .card-footer .footer-brand {
-  font-size: 13px;
-  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--neo-black);
   letter-spacing: 2px;
 }
 
 .card-footer .footer-social {
-  font-size: 12px;
-  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--neo-black);
   letter-spacing: 1px;
 }
 
 .card-footer .footer-social .hl {
-  color: var(--gold);
-  font-weight: 600;
+  font-weight: 900;
+  background: var(--neo-yellow);
+  padding: 2px 8px;
+  border: var(--border-thin);
 }
 
-/* 一图流模式下隐藏固定页脚，使用一图流专用页脚 */
+/* ============================================
+   键盘提示
+   ============================================ */
+.key-hint {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--neo-black);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 1s;
+  background: var(--neo-yellow);
+  border: var(--border);
+  padding: 6px 16px;
+}
+
+/* ============================================
+   一图流模式
+   ============================================ */
+body.one-pager-mode {
+  overflow: auto !important;
+}
+
+body.one-pager-mode .nav {
+  display: none;
+}
+
+body.one-pager-mode #slides-container {
+  display: none;
+}
+
 body.one-pager-mode .card-footer {
   display: none;
 }
 
-/* --- 一图流页脚 --- */
+#one-pager {
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--neo-cream);
+}
+
+body.one-pager-mode #one-pager {
+  display: block;
+}
+
+/* 一图流内容区 */
+.op-container {
+  width: 800px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+
+/* 一图流模块卡片 */
+.op-section {
+  background: var(--neo-white);
+  border: var(--border);
+  box-shadow: var(--shadow-md);
+  padding: 32px 36px;
+  margin-bottom: 24px;
+}
+
+.op-section:nth-child(odd) {
+  transform: rotate(-0.3deg);
+}
+
+.op-section:nth-child(even) {
+  transform: rotate(0.3deg);
+}
+
+.op-section-title {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--neo-black);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  background: var(--neo-yellow);
+  border: var(--border);
+  padding: 8px 20px;
+  display: inline-block;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* 页头 */
+.op-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.op-header-title {
+  font-size: 48px;
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 3px #000000;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.op-header-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.op-header-meta span {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--neo-black);
+  background: var(--neo-white);
+  border: var(--border-thin);
+  padding: 6px 14px;
+  letter-spacing: 1px;
+}
+
+.op-header-meta span:nth-child(1) { transform: rotate(-1deg); }
+.op-header-meta span:nth-child(3) { transform: rotate(0.5deg); }
+.op-header-meta span:nth-child(5) { transform: rotate(-0.5deg); }
+.op-header-meta span:nth-child(7) { transform: rotate(1deg); }
+
+.op-header-meta .sep {
+  background: none !important;
+  border: none !important;
+  padding: 0 4px !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+}
+
+/* 分数总览 */
+.op-score-row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.op-score-card {
+  flex: 1;
+  text-align: center;
+  background: var(--neo-white);
+  border: var(--border);
+  padding: 24px 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.op-score-card:nth-child(1) { transform: rotate(-1deg); }
+.op-score-card:nth-child(2) { transform: rotate(0.5deg); }
+.op-score-card:nth-child(3) { transform: rotate(-0.5deg); }
+
+.op-score-value {
+  font-size: 44px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 6px;
+  color: var(--neo-black);
+}
+
+.op-score-card.accent-gold .op-score-value {
+  color: var(--neo-red);
+}
+
+.op-score-card.accent-orange .op-score-value {
+  color: var(--neo-black);
+}
+
+.op-score-card.accent-blue .op-score-value {
+  color: var(--neo-black);
+}
+
+.op-score-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--neo-black);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* TOP 队伍 */
+.op-top5-row {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+}
+
+.op-top5-card {
+  flex: 1;
+  max-width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: var(--neo-white);
+  border: var(--border);
+  padding: 20px 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.op-top5-card:nth-child(1) { transform: rotate(-1.5deg); }
+.op-top5-card:nth-child(2) { transform: rotate(0.5deg); }
+.op-top5-card:nth-child(3) { transform: rotate(-0.5deg); }
+.op-top5-card:nth-child(4) { transform: rotate(1deg); }
+.op-top5-card:nth-child(5) { transform: rotate(-1deg); }
+
+.op-top5-card .op-top5-role {
+  font-size: 11px;
+  font-weight: 900;
+  padding: 3px 10px;
+  border: var(--border-thin);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.op-top5-card .op-top5-name {
+  font-size: 14px;
+  color: var(--neo-black);
+  font-weight: 700;
+  text-align: center;
+  word-break: break-all;
+}
+
+.op-top5-card.role-tank { background: #FFF0F0; }
+.op-top5-card.role-tank .op-top5-role { background: #FF6B6B; color: #FFFFFF; }
+
+.op-top5-card.role-healer { background: #F0FFF0; }
+.op-top5-card.role-healer .op-top5-role { background: #82C878; color: #FFFFFF; }
+
+.op-top5-card.role-dps { background: #FFFEF0; }
+.op-top5-card.role-dps .op-top5-role { background: #FFD93D; color: #000000; }
+
+/* 强势阵容 */
+.op-lineup-row {
+  display: flex;
+  gap: 20px;
+}
+
+.op-lineup-group {
+  flex: 1;
+  background: var(--neo-white);
+  border: var(--border);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.op-lineup-group:first-child { transform: rotate(-0.5deg); }
+.op-lineup-group:last-child { transform: rotate(0.5deg); }
+
+.op-lineup-group-title {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--neo-black);
+  text-align: center;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: var(--neo-yellow);
+  border: var(--border);
+  padding: 6px 16px;
+  margin-bottom: 16px;
+}
+
+.op-lineup-members-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.op-lineup-member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  background: var(--neo-white);
+  border: var(--border-thin);
+  min-width: 70px;
+}
+
+.op-lineup-role {
+  font-size: 10px;
+  font-weight: 900;
+  padding: 2px 10px;
+  border: var(--border-thin);
+  min-width: 40px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.op-lineup-role.role-tank { background: #FF6B6B; color: #FFFFFF; }
+.op-lineup-role.role-healer { background: #82C878; color: #FFFFFF; }
+.op-lineup-role.role-dps { background: #FFD93D; color: #000000; }
+
+.op-lineup-class {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.op-lineup-name {
+  font-size: 13px;
+  color: var(--neo-black);
+  font-weight: 700;
+}
+
+/* 专精排行 */
+.op-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.op-spec-cell {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--neo-cream);
+  border: var(--border-thin);
+  padding: 4px 7px;
+  min-width: 0;
+}
+
+.op-spec-rank {
+  font-size: 10px;
+  color: var(--neo-black);
+  min-width: 18px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.op-spec-name {
+  font-size: 12px;
+  color: var(--neo-black);
+  font-weight: 700;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.op-spec-score {
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--neo-red);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+/* 低于称号线的专精 — 受不平衡待遇 */
+.op-spec-cell-weak {
+  background: #FFF0F0;
+  border-color: #FF6B6B;
+  border-style: dashed;
+  position: relative;
+}
+
+.op-spec-cell-weak::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 3px,
+    rgba(255, 107, 107, 0.08) 3px,
+    rgba(255, 107, 107, 0.08) 6px
+  );
+  pointer-events: none;
+}
+
+/* 紧凑版限时最高层数小标题（一图流） */
+.op-dungeon-compact-title {
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--neo-black);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  padding-top: 14px;
+  border-top: 2px dashed #000000;
+}
+
+/* 副本限时（紧凑网格） */
+.op-dungeon-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.op-dungeon-grid-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--neo-white);
+  border: var(--border-thin);
+  padding: 8px 12px;
+  box-shadow: var(--shadow-sm);
+  gap: 4px;
+}
+
+.op-dungeon-grid-name {
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--neo-black);
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.op-dungeon-grid-level {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--neo-black);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.op-dungeon-grid-suffix {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* 页脚 */
 .op-footer {
   text-align: center;
-  font-size: 12px;
-  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--neo-black);
   letter-spacing: 1px;
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid var(--border-card);
+  border-top: var(--border);
+  background: var(--neo-white);
+  padding: 20px;
 }
 
-/* --- 一图流浮动返回按钮 --- */
+/* 一图流返回按钮 */
 .op-back-btn {
   position: fixed;
   bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 200;
-  background: rgba(201, 168, 76, 0.15);
-  border: 1px solid rgba(201, 168, 76, 0.35);
-  color: var(--gold);
-  font-size: 13px;
-  padding: 10px 24px;
-  border-radius: 8px;
+  background: var(--neo-red);
+  border: var(--border);
+  color: var(--neo-white);
+  font-size: 14px;
+  font-weight: 900;
+  font-family: var(--font);
+  padding: 12px 28px;
   cursor: pointer;
   letter-spacing: 2px;
-  transition: all 0.25s;
-  backdrop-filter: blur(8px);
-}
-.op-back-btn:hover {
-  background: rgba(201, 168, 76, 0.25);
-  border-color: rgba(201, 168, 76, 0.55);
-  box-shadow: 0 0 16px rgba(201, 168, 76, 0.2);
+  text-transform: uppercase;
+  transition: all 0.1s ease-linear;
+  box-shadow: var(--shadow-md);
 }
 
-/* --- 键盘提示 --- */
-.key-hint {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 13px;
-  color: var(--text-muted);
-  letter-spacing: 1px;
-  opacity: 0;
-  transition: opacity 1s;
+.op-back-btn:hover {
+  background: var(--neo-yellow);
+  color: var(--neo-black);
+}
+
+.op-back-btn:active {
+  transform: translateX(-50%) translate(2px, 2px);
+  box-shadow: none;
 }
 
 /* ============================================
-   主题微调
+   动画与交互
    ============================================ */
 
-/* 极简白昼：关闭径向渐变，纯色背景 */
-[data-theme="light"] .slide,
-[data-theme="light"] #one-pager {
-  background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-surface) 100%);
+/* 按钮按压效果 */
+.nav-arrow:active,
+.btn-onepager:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
 }
 
-/* 赛博朋克：卡片发光边框 */
-[data-theme="cyber"] .op-section {
-  border-color: rgba(0, 255, 200, 0.15);
-  box-shadow: 0 0 30px rgba(0, 255, 200, 0.03), inset 0 0 30px rgba(0, 255, 200, 0.01);
-}
-[data-theme="cyber"] .op-spec-cell {
-  border-color: rgba(0, 255, 200, 0.08);
-}
-
-/* 羊皮古卷：增加卡片厚重感 */
-[data-theme="parchment"] .op-section {
-  border-width: 2px;
-  border-style: double;
-}
-[data-theme="parchment"] .op-section-title {
-  font-style: italic;
+/* 卡片悬停提升 */
+.neo-card:hover,
+.team-card:hover,
+.lineup-member-card:hover,
+.dungeon-row:hover {
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
 }
 
-/* 现代暗黑：卡片无圆角，更硬朗 */
-[data-theme="mono"] .op-section,
-[data-theme="mono"] .stat-card {
-  border-radius: 2px;
+/* 减速动画支持 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
-[data-theme="mono"] .op-spec-cell {
-  border-radius: 0;
+
+/* ============================================
+   响应式（截图/视频嵌入优先 1920x1080）
+   ============================================ */
+
+/* 小屏适配 */
+@media (max-width: 1400px) {
+  .hero-value { font-size: 100px; }
+  .s1-title, .s1-title-bar .s1-title-solid { font-size: 56px; }
+  .team-score { font-size: 80px; }
+  .neo-value.neo-giant { font-size: 100px; }
+  .lineup-groups { gap: 24px; }
+  .lineup-group { padding: 24px 28px; }
+}
+
+@media (max-width: 1024px) {
+  .hero-value { font-size: 72px; }
+  .s1-title, .s1-title-bar .s1-title-solid { font-size: 40px; }
+  .team-score { font-size: 56px; }
+  .team-members { flex-wrap: wrap; gap: 12px; }
+  .team-card { min-width: 130px; padding: 20px 20px; }
+  .lineup-groups { flex-direction: column; }
+  .lineup-group { max-width: 100%; }
+  .season-hero { gap: 40px; }
+  .dungeon-list { width: 95%; }
+}
+
+/* ============================================
+   打印/截图优化
+   ============================================ */
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* ============================================
+   装饰贴纸元素
+   ============================================ */
+.sticker-star {
+  display: inline-block;
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--neo-yellow);
+  -webkit-text-stroke: 2px #000000;
+}
+
+.sticker-dot {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: var(--neo-red);
+  border: var(--border);
 }

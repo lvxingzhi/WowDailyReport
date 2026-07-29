@@ -1,7 +1,7 @@
 {
   "meta": {
     "season": "至暗之夜S1",
-    "generatedAt": "2026-07-27T10:49:50",
+    "generatedAt": "2026-07-29T11:24:31",
     "dataCount": 6,
     "latestDate": "20260727"
   },
@@ -40,8 +40,6 @@
       },
       "top1Pct": 3955.63,
       "top01Pct": 4210.72,
-      "iron24": 79,
-      "iron23": 1230,
       "faithSpecs": [
         {
           "name": "D邪DK",
@@ -273,8 +271,6 @@
       },
       "top1Pct": 3962.17,
       "top01Pct": 4219.98,
-      "iron24": 87,
-      "iron23": 1312,
       "faithSpecs": [
         {
           "name": "D邪DK",
@@ -506,8 +502,6 @@
       },
       "top1Pct": 3969.56,
       "top01Pct": 4230.52,
-      "iron24": 101,
-      "iron23": 1436,
       "faithSpecs": [
         {
           "name": "D邪DK",
@@ -739,8 +733,6 @@
       },
       "top1Pct": 3969.56,
       "top01Pct": 4230.52,
-      "iron24": 101,
-      "iron23": 1436,
       "faithSpecs": [
         {
           "name": "D邪DK",
@@ -956,8 +948,6 @@
       },
       "top1Pct": 3985.21,
       "top01Pct": 4246.51,
-      "iron24": 170,
-      "iron23": 1750,
       "faithSpecs": [
         {
           "name": "H奶僧",
@@ -1189,8 +1179,6 @@
       },
       "top1Pct": 4008.83,
       "top01Pct": 4251.74,
-      "iron24": 190,
-      "iron23": 2058,
       "faithSpecs": [
         {
           "name": "D邪DK",

@@ -1,0 +1,414 @@
+"""
+Raider.io 数据自动抓取脚本
+
+从 raider.io API 抓取大秘境数据，自动追加到 Excel「每日数据」Sheet。
+全部数据自动填充，无需手动补录。
+
+跨赛季使用：只需修改下方 CONFIG 中的 SEASON_SLUG、EXPANSION_ID 和 EXCEL_FILE。
+
+@author ext.ahs.lvxingz1
+"""
+import json
+import sys
+import time
+import urllib.request
+from datetime import datetime, date
+from pathlib import Path
+
+import openpyxl
+
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║                        📋 配置区（跨赛季改这里）                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+# --- 赛季配置 ---
+SEASON_SLUG = "season-mn-1"     # 赛季 slug，如 season-mn-1, season-mn-2, season-tww-1
+EXPANSION_ID = 11               # 资料片 ID：11=Midnight, 10=TheWarWithin
+EXCEL_FILE = "大秘境分数行情_至暗之夜第一赛季.xlsx"  # Excel 文件名
+
+# 代理设置（留空则不使用代理）
+PROXY = ""
+
+# --- 40 专精映射：Excel 列号（1-based）→ API class/spec ---
+# 列号对应：Q=17, R=18, ... BF=56
+SPEC_MAP = [
+    # (列号, API class_slug, API spec_slug, Excel 中文名)
+    (17, "death-knight",  "blood",         "T血DK"),
+    (18, "death-knight",  "frost",         "D冰DK"),
+    (19, "death-knight",  "unholy",        "D邪DK"),
+    (20, "demon-hunter",  "devourer",      "D噬灭"),
+    (21, "demon-hunter",  "havoc",         "D浩劫"),
+    (22, "demon-hunter",  "vengeance",     "T复仇"),
+    (23, "druid",         "balance",       "D鸟德"),
+    (24, "druid",         "feral",         "D野德"),
+    (25, "druid",         "guardian",      "T熊T"),
+    (26, "druid",         "restoration",   "H奶德"),
+    (27, "evoker",        "augmentation",  "D增辉"),
+    (28, "evoker",        "devastation",   "D湮灭"),
+    (29, "evoker",        "preservation",  "H恩护"),
+    (30, "hunter",        "beast-mastery", "D兽王"),
+    (31, "hunter",        "marksmanship",  "D射击"),
+    (32, "hunter",        "survival",      "D生存"),
+    (33, "mage",          "arcane",        "D奥法"),
+    (34, "mage",          "fire",          "D火法"),
+    (35, "mage",          "frost",         "D冰法"),
+    (36, "monk",          "brewmaster",    "T酒仙"),
+    (37, "monk",          "mistweaver",    "H奶僧"),
+    (38, "monk",          "windwalker",    "D踏风"),
+    (39, "paladin",       "holy",          "H奶骑"),
+    (40, "paladin",       "protection",    "T防骑"),
+    (41, "paladin",       "retribution",   "D惩戒"),
+    (42, "priest",        "discipline",    "H戒律"),
+    (43, "priest",        "holy",          "H神牧"),
+    (44, "priest",        "shadow",        "D暗牧"),
+    (45, "rogue",         "assassination", "D刺杀"),
+    (46, "rogue",         "outlaw",        "D狂徒"),
+    (47, "rogue",         "subtlety",      "D敏锐"),
+    (48, "shaman",        "elemental",     "D元素"),
+    (49, "shaman",        "enhancement",   "D增强"),
+    (50, "shaman",        "restoration",   "H奶萨"),
+    (51, "warlock",       "affliction",    "D痛苦"),
+    (52, "warlock",       "demonology",    "D恶魔"),
+    (53, "warlock",       "destruction",   "D毁灭"),
+    (54, "warrior",       "arms",          "D武器"),
+    (55, "warrior",       "fury",          "D狂暴"),
+    (56, "warrior",       "protection",    "T防战"),
+]
+
+# --- 8 副本映射：Excel 列号 → API dungeon slug ---
+DUNGEON_MAP = [
+    # (列号 1-based, API slug, 中文名)
+    (9,  "seat-of-the-triumvirate", "执政团之座"),
+    (10, "nexuspoint-xenas",        "节点希纳斯"),
+    (11, "algethar-academy",        "艾杰斯亚学院"),
+    (12, "pit-of-saron",            "萨隆矿坑"),
+    (13, "maisara-caverns",         "迈萨拉洞窟"),
+    (14, "skyreach",                "通天峰"),
+    (15, "windrunner-spire",        "风行者之塔"),
+    (16, "magisters-terrace",       "魔导师平台"),
+]
+
+# --- 专精简称映射（API spec名 → 中文简称，用于 H 列队伍名）---
+SPEC_ABBR = {
+    "Blood": "T血DK", "Frost": "D冰DK", "Unholy": "D邪DK",
+    "Devourer": "D噬灭", "Havoc": "D浩劫", "Vengeance": "T复仇",
+    "Balance": "D鸟德", "Feral": "D野德", "Guardian": "T熊T", "Restoration": "H奶德",
+    "Augmentation": "D增辉", "Devastation": "D湮灭", "Preservation": "H恩护",
+    "Beast Mastery": "D兽王", "Marksmanship": "D射击", "Survival": "D生存",
+    "Arcane": "D奥法", "Fire": "D火法",
+    "Brewmaster": "T酒仙", "Mistweaver": "H奶僧", "Windwalker": "D踏风",
+    "Holy": "H神牧", "Protection": "T防骑", "Retribution": "D惩戒",
+    "Discipline": "H戒律", "Shadow": "D暗牧",
+    "Assassination": "D刺杀", "Outlaw": "D狂徒", "Subtlety": "D敏锐",
+    "Elemental": "D元素", "Enhancement": "D增强",
+    "Affliction": "D痛苦", "Demonology": "D恶魔", "Destruction": "D毁灭",
+    "Arms": "D武器", "Fury": "D狂暴",
+}
+# 处理重名：Holy 在 Paladin 是 H奶骑，在 Priest 是 H神牧
+# 以及 Restoration 在 Druid 是 H奶德，在 Shaman 是 H奶萨
+# Frost 在 DK 是 D冰DK，在 Mage 是 D冰法
+# 用 (class, spec) 元组覆盖
+SPEC_ABBR_OVERRIDE = {
+    ("Paladin", "Holy"): "H奶骑",
+    ("Shaman", "Restoration"): "H奶萨",
+    ("Druid", "Restoration"): "H奶德",
+    ("Mage", "Frost"): "D冰法",
+    ("Death Knight", "Frost"): "D冰DK",
+    ("Priest", "Holy"): "H神牧",
+    ("Warrior", "Protection"): "T防战",
+    ("Paladin", "Protection"): "T防骑",
+}
+
+
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║                          🔧 工具函数                             ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+def api_get(url, retries=3, delay=1.0):
+    """调用 raider.io API，自动重试。"""
+    for attempt in range(retries):
+        try:
+            req = urllib.request.Request(url, headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+                "Accept": "application/json",
+            })
+            if PROXY:
+                req.set_proxy(PROXY, "http")
+            resp = urllib.request.urlopen(req, timeout=20)
+            return json.loads(resp.read())
+        except Exception as e:
+            if attempt < retries - 1:
+                time.sleep(delay)
+            else:
+                raise
+
+
+def spec_abbr(class_name, spec_name):
+    """返回中文专精简称，如 'Guardian' + 'Druid' → 'T熊T'"""
+    key = (class_name, spec_name)
+    if key in SPEC_ABBR_OVERRIDE:
+        return SPEC_ABBR_OVERRIDE[key]
+    return SPEC_ABBR.get(spec_name, spec_name)
+
+
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║                       📊 数据抓取函数                            ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+def fetch_spec_scores():
+    """抓取 40 专精全球 #1 分数。返回 {col: (score, char_name, class, spec)}"""
+    results = {}
+    for col, class_slug, spec_slug, _cn_name in SPEC_MAP:
+        url = (f"https://raider.io/api/mythic-plus/rankings/specs"
+               f"?season={SEASON_SLUG}&region=world"
+               f"&class={class_slug}&spec={spec_slug}&page=0")
+        try:
+            data = api_get(url)
+            ranked = data["rankings"]["rankedCharacters"]
+            if ranked:
+                top = ranked[0]
+                char = top["character"]
+                results[col] = {
+                    "score": top["score"],
+                    "name": char["name"],
+                    "class": char["class"]["name"],
+                    "spec": char["spec"]["name"],
+                }
+            else:
+                results[col] = {"score": 0, "name": "", "class": "", "spec": ""}
+        except Exception as e:
+            print(f"  ⚠️ 专精 {_cn_name} ({class_slug}/{spec_slug}) 抓取失败: {e}")
+            results[col] = {"score": 0, "name": "", "class": "", "spec": ""}
+        time.sleep(0.15)  # 避免请求过快
+    return results
+
+
+def fetch_dungeon_levels():
+    """抓取 8 副本全球最高限时层数。返回 {col: level}"""
+    results = {}
+    for col, slug, _cn_name in DUNGEON_MAP:
+        url = (f"https://raider.io/api/v1/mythic-plus/runs"
+               f"?season={SEASON_SLUG}&region=world&dungeon={slug}&page=0")
+        try:
+            data = api_get(url)
+            if data.get("rankings"):
+                results[col] = data["rankings"][0]["run"]["mythic_level"]
+            else:
+                results[col] = 0
+        except Exception as e:
+            print(f"  ⚠️ 副本 {_cn_name} ({slug}) 抓取失败: {e}")
+            results[col] = 0
+        time.sleep(0.15)
+    return results
+
+
+def fetch_season_cutoffs():
+    """抓取中国区 0.1% / 1% 分数线。返回 (top01pct, top1pct)"""
+    url = (f"https://raider.io/api/v1/mythic-plus/season-cutoffs"
+           f"?season={SEASON_SLUG}&region=cn")
+    data = api_get(url)
+    cutoffs = data["cutoffs"]
+    top01 = cutoffs["p999"]["all"]["quantileMinValue"]
+    top1 = cutoffs["p990"]["all"]["quantileMinValue"]
+    return round(top01, 2), round(top1, 2)
+
+
+def fetch_top_team():
+    """
+    获取全球最高分角色的队伍信息。
+    从所有专精 #1 中找最高分，取对应 run roster，格式化为 H 列字符串。
+    返回 (highest_score, team_str)
+    """
+    print("  🔍 正在查找全球最高分角色...")
+
+    # 获取所有专精 #1，找出最高分
+    best_score = 0
+    best_run_id = None
+    best_char = None
+
+    for col, class_slug, spec_slug, _cn_name in SPEC_MAP:
+        url = (f"https://raider.io/api/mythic-plus/rankings/specs"
+               f"?season={SEASON_SLUG}&region=world"
+               f"&class={class_slug}&spec={spec_slug}&page=0")
+        try:
+            data = api_get(url)
+            ranked = data["rankings"]["rankedCharacters"]
+            if ranked and ranked[0]["score"] > best_score:
+                best_score = ranked[0]["score"]
+                best_run_id = ranked[0]["runs"][0]["keystoneRunId"]
+                best_char = ranked[0]["character"]
+        except Exception:
+            pass
+        time.sleep(0.1)
+
+    if best_score == 0:
+        print("  ⚠️ 未能获取最高分")
+        return 0, ""
+
+    print(f"  最高分: {best_score:.1f} (run_id={best_run_id})")
+
+    # 获取 run details 拿到 roster
+    url = (f"https://raider.io/api/v1/mythic-plus/run-details"
+           f"?season={SEASON_SLUG}&id={best_run_id}")
+    details = api_get(url)
+    roster = details.get("roster", [])
+
+    team_parts = []
+    for member in roster:
+        char = member["character"]
+        abbr = spec_abbr(char["class"]["name"], char["spec"]["name"])
+        team_parts.append(f"{char['name']}-{abbr}")
+
+    team_str = ",".join(team_parts)
+    print(f"  队伍: {team_str}")
+    return round(best_score, 1), team_str
+
+
+def fetch_season_info():
+    """获取赛季周数、结束日期等信息。返回 (season_name, season_week, end_date_str)"""
+    url = f"https://raider.io/api/v1/mythic-plus/static-data?expansion_id={EXPANSION_ID}"
+    data = api_get(url)
+    for s in data.get("seasons", []):
+        if s["slug"] == SEASON_SLUG:
+            ends_cn = s.get("ends", {}).get("cn", "")
+            return s.get("name", SEASON_SLUG), None, ends_cn
+    return SEASON_SLUG, None, ""
+
+
+def calc_weeks_remaining(end_date_str):
+    """根据结束日期计算剩余周数。"""
+    if not end_date_str:
+        return "?"
+    try:
+        end_date = datetime.strptime(end_date_str[:10], "%Y-%m-%d").date()
+        today = date.today()
+        delta = end_date - today
+        weeks = max(0, delta.days // 7)
+        return weeks
+    except Exception:
+        return "?"
+
+
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║                       📝 Excel 写入                             ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+def append_to_excel(excel_path, row_data):
+    """
+    向 Excel「每日数据」Sheet 追加一行。
+
+    参数:
+        excel_path: Excel 文件路径
+        row_data: dict，key 为 1-based 列号，value 为单元格值
+    """
+    wb = openpyxl.load_workbook(excel_path)
+    ws = wb["每日数据"]
+
+    next_row = ws.max_row + 1
+    for col, value in row_data.items():
+        ws.cell(row=next_row, column=col, value=value)
+
+    wb.save(excel_path)
+    wb.close()
+    print(f"✅ 已追加到 {excel_path} 第 {next_row} 行")
+
+
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║                          🚀 主流程                              ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+def main():
+    project_root = Path(__file__).resolve().parent.parent
+    excel_path = project_root / EXCEL_FILE
+
+    if not excel_path.exists():
+        print(f"❌ Excel 文件不存在: {excel_path}")
+        sys.exit(1)
+
+    today_str = datetime.now().strftime("%Y%m%d")
+    print(f"🚀 开始抓取数据... (日期={today_str}, 赛季={SEASON_SLUG})")
+    print()
+
+    # 1. 赛季信息
+    print("📅 赛季信息...")
+    season_name, _, end_date = fetch_season_info()
+    weeks_remaining = calc_weeks_remaining(end_date)
+    print(f"  赛季: {season_name}, 结束: {end_date[:10] if end_date else '?'}, 剩余周: {weeks_remaining}")
+    print()
+
+    # 2. 分数线（中国区）
+    print("📊 分数线 (CN)...")
+    top01pct, top1pct = fetch_season_cutoffs()
+    print(f"  0.1%: {top01pct}, 1%: {top1pct}")
+    print()
+
+    # 3. 副本层数（全球）
+    print("🗺️ 副本限时层数 (World)...")
+    dungeon_levels = fetch_dungeon_levels()
+    for col, (slug, cn_name) in [(c, (s, n)) for c, s, n in DUNGEON_MAP]:
+        print(f"  {cn_name}: {dungeon_levels.get(col, '?')}")
+    print()
+
+    # 4. 专精分数（全球）+ 顺便找最高分队伍
+    print("⚔️ 专精最高分 (World)...")
+    spec_scores = fetch_spec_scores()
+    for col, _cs, _ss, cn_name in SPEC_MAP:
+        info = spec_scores.get(col, {})
+        print(f"  {cn_name}: {info.get('score', 0):.1f}")
+    print()
+
+    # 5. 最高分+队伍
+    print("👑 最高分队伍...")
+    highest_score, team_str = fetch_top_team()
+    print()
+
+    # 6. 组装 Excel 行数据
+    # 列号映射：
+    # A=1(日期), B=2(赛季), C=3(赛季周), D=4(剩余周),
+    # E=5(最高分), F=6(0.1%), G=7(1%), H=8(队伍),
+    # I-P=9~16(副本), Q-BF=17~56(专精)
+
+    # 从已有数据继承赛季名、推算赛季周
+    wb = openpyxl.load_workbook(excel_path)
+    ws = wb["每日数据"]
+    prev_week = None
+    prev_season = None
+    if ws.max_row >= 2:
+        prev_week = ws.cell(row=ws.max_row, column=3).value
+        prev_season = ws.cell(row=ws.max_row, column=2).value
+    wb.close()
+
+    # 赛季名优先使用已有的（中文名），否则用 API 返回的
+    if prev_season and str(prev_season).strip():
+        season_name = str(prev_season).strip()
+    season_week = (int(prev_week) + 1) if prev_week is not None and isinstance(prev_week, (int, float)) else 1
+
+    row_data = {
+        1: int(today_str),
+        2: season_name,
+        3: season_week,
+        4: weeks_remaining,
+        5: highest_score,
+        6: top01pct,
+        7: top1pct,
+        8: team_str,
+    }
+
+    # 副本层数
+    for col, level in dungeon_levels.items():
+        row_data[col] = level
+
+    # 专精分数
+    for col, info in spec_scores.items():
+        row_data[col] = round(info["score"], 1)
+
+    # 7. 写入 Excel
+    append_to_excel(excel_path, row_data)
+
+    # 8. 完成
+    print()
+    print("🎉 完成！全部数据已自动填充。")
+
+
+if __name__ == "__main__":
+    main()

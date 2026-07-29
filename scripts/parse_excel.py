@@ -35,9 +35,7 @@ COL_TOP01_PCT = 5      # 0.1%分数
 COL_TOP1_PCT = 6       # 1%分数
 COL_TEAM = 7           # 最高队伍(角色名-职业,逗号分隔)
 DUNGEON_START_COL = 8  # 副本层数起始列（8~15，共8个）
-COL_IRON24 = 16        # 最高铁人数
-COL_IRON23 = 17        # 次铁人数
-SPEC_START_COL = 18    # 专精分数起始列（18~57，共40个）
+SPEC_START_COL = 16    # 专精分数起始列（16~55，共40个）
 
 
 def parse_national_team(ws) -> list:
@@ -164,10 +162,6 @@ def parse_excel(excel_path: str) -> dict:
         top01pct = safe_float(row[COL_TOP01_PCT])
         top1pct = safe_float(row[COL_TOP1_PCT])
 
-        # --- 铁钥匙人数 ---
-        iron24 = safe_int(row[COL_IRON24])
-        iron23 = safe_int(row[COL_IRON23])
-
         # --- 专精分数（40 个） ---
         faith_specs = []
         for i, name in enumerate(spec_names):
@@ -203,8 +197,6 @@ def parse_excel(excel_path: str) -> dict:
             },
             "top1Pct": top1pct,
             "top01Pct": top01pct,
-            "iron24": iron24,
-            "iron23": iron23,
             "faithSpecs": faith_specs,
             "dungeons": dungeons
         }

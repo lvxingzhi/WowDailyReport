@@ -11,7 +11,7 @@
 let currentSlide = 0;
 
 /** 幻灯片总数 */
-const totalSlides = 7;
+const totalSlides = 5;
 
 /** 所有 slide 元素 */
 let slides = [];
@@ -61,7 +61,7 @@ function getRoleFromClass(className) {
 
 const SLIDE_IDS = [
   'slide-1', 'slide-2', 'slide-3', 'slide-4',
-  'slide-5', 'slide-6', 'slide-7'
+  'slide-5'
 ];
 
 /**
@@ -140,7 +140,7 @@ function renderOverview() {
 }
 
 /**
- * 渲染第一名5人小队（Slide 3）
+ * 渲染第一名5人小队 + 限时最高层数（Slide 3）
  */
 function renderRank1() {
   const l = latest();
@@ -163,6 +163,9 @@ function renderRank1() {
       `;
     })
     .join('');
+
+  // 渲染紧凑版限时最高层数
+  renderDungeonsCompact();
 }
 
 /**
@@ -200,32 +203,24 @@ function renderEco() {
 }
 
 /**
- * 渲染副本限时最高层数列表（Slide 6）
+ * 渲染紧凑版限时最高层数列表（嵌入 Slide 3）
  */
-function renderDungeons() {
+function renderDungeonsCompact() {
   const l = latest();
   if (!l) return;
 
-  const container = document.getElementById('dungeon-list');
+  const container = document.getElementById('dungeon-compact-list');
   if (!container) return;
 
-  // 按层数从高到低排序，层数不同时用不同颜色区分
   const sorted = [...l.dungeons].sort((a, b) => b.level - a.level);
-  const maxLevel = sorted[0]?.level || 0;
 
-  // 颜色阶梯：高→低，金→橙→蓝紫→蓝灰
-  const colors = [
-    '#e4c76b', '#d49a3c', '#c97a5a', '#a07a8b',
-    '#6a8fbf', '#5a7faa', '#4a6f95', '#3a5f80'
-  ];
+  // Neo-brutalism 交替色
+  const neoBorderColors = ['#FF6B6B', '#000000', '#FFD93D', '#C4B5FD', '#FF6B6B', '#000000', '#FFD93D', '#C4B5FD'];
 
   container.innerHTML = sorted.map((d, i) => `
-    <div class="dungeon-row" style="border-left: 4px solid ${colors[i]}; background: ${colors[i]}0a;">
-      <span class="dungeon-name" style="color: ${colors[i]}">${d.name}</span>
-      <span class="dungeon-level">
-        <span class="dungeon-level-num" style="color: ${colors[i]}">${d.level}</span>
-        <span class="dungeon-level-suffix">层</span>
-      </span>
+    <div class="dungeon-compact-row" style="border-left:5px solid ${neoBorderColors[i]};">
+      <span class="dungeon-compact-name">${d.name}</span>
+      <span class="dungeon-compact-level">${d.level}<span class="dungeon-compact-suffix">层</span></span>
     </div>
   `).join('');
 }
@@ -233,6 +228,7 @@ function renderDungeons() {
 /**
  * 渲染专精分数排行表格（Slide 5）
  * 40 专精按分数从高到低展示，4 列网格
+ * 低于称号线（top01Pct）的专精标记特殊背景
  */
 function renderFaith() {
   const l = latest();
@@ -242,7 +238,8 @@ function renderFaith() {
   if (!container) return;
 
   const specs = l.faithSpecs;
-  // 按分数从高到低分行排列，每列 10 行
+  const titleLine = l.top01Pct; // 0.1% 称号线
+
   const rows = [];
   const cols = 4;
   const perCol = Math.ceil(specs.length / cols);
@@ -252,8 +249,9 @@ function renderFaith() {
       const idx = r * cols + c;
       if (idx < specs.length) {
         const spec = specs[idx];
+        const belowTitle = spec.score < titleLine;
         cells.push(`
-          <div class="faith-cell">
+          <div class="faith-cell${belowTitle ? ' faith-cell-weak' : ''}">
             <span class="faith-rank">#${idx + 1}</span>
             ${iconImg(spec.name, 'icon-sm')}
             <span class="faith-name">${showName(spec.name)}</span>
@@ -277,7 +275,6 @@ function renderAll() {
   renderRank1();
   renderEco();
   renderFaith();
-  renderDungeons();
 }
 
 /* ==================== 一图流模式 ==================== */
@@ -321,15 +318,13 @@ function renderOnePager() {
   // 队伍角色辅助
   const roleIcons = { '坦克': '🛡️', '治疗': '💚', '输出': '⚔️' };
 
-  // 副本颜色
-  const colors = [
-    '#e4c76b', '#d49a3c', '#c97a5a', '#a07a8b',
-    '#6a8fbf', '#5a7faa', '#4a6f95', '#3a5f80'
-  ];
+  // Neo-brutalism 副本颜色
+  const neoDungeonColors = ['#FF6B6B', '#000000', '#FFD93D', '#C4B5FD', '#FF6B6B', '#000000', '#FFD93D', '#C4B5FD'];
   const sortedDungeons = [...l.dungeons].sort((a, b) => b.level - a.level);
 
   // 专精排行：4列网格排序
   const specs = l.faithSpecs;
+  const titleLine = l.top01Pct; // 0.1% 称号线，低于此线受不平衡待遇
   const cols = 4;
   const perCol = Math.ceil(specs.length / cols);
 
@@ -338,7 +333,7 @@ function renderOnePager() {
 
       <!-- 页头 -->
       <div class="op-header">
-        <div class="op-header-title">大秘境周报</div>
+        <div class="op-header-title">今日一报</div>
         <div class="op-header-meta">
           <span>${reportData.meta.season}</span>
           <span class="sep">·</span>
@@ -369,7 +364,7 @@ function renderOnePager() {
         </div>
       </div>
 
-      <!-- TOP 队伍 -->
+      <!-- 世界TOP + 限时最高层数（合并） -->
       <div class="op-section">
         <div class="op-section-title">世界TOP</div>
         <div class="op-top5-row">
@@ -383,6 +378,15 @@ function renderOnePager() {
               </div>
             `;
           }).join('')}
+        </div>
+        <div class="op-dungeon-compact-title">限时最高层数</div>
+        <div class="op-dungeon-grid">
+          ${sortedDungeons.map((d, i) => `
+            <div class="op-dungeon-grid-row" style="border-left:5px solid ${neoDungeonColors[i]};">
+              <span class="op-dungeon-grid-name">${d.name}</span>
+              <span class="op-dungeon-grid-level">${d.level}<span class="op-dungeon-grid-suffix">层</span></span>
+            </div>
+          `).join('')}
         </div>
       </div>
 
@@ -418,8 +422,9 @@ function renderOnePager() {
                 const idx = r * cols + c;
                 if (idx < specs.length) {
                   const spec = specs[idx];
+                  const belowTitle = spec.score < titleLine;
                   cells.push(`
-                    <div class="op-spec-cell">
+                    <div class="op-spec-cell${belowTitle ? ' op-spec-cell-weak' : ''}">
                       <span class="op-spec-rank">#${idx + 1}</span>
                       ${iconImg(spec.name, 'icon-sm')}
                       <span class="op-spec-name">${showName(spec.name)}</span>
@@ -431,37 +436,6 @@ function renderOnePager() {
             }
             return cells.join('');
           })()}
-        </div>
-      </div>
-
-      <!-- 副本限时 -->
-      <div class="op-section">
-        <div class="op-section-title">限时最高层数</div>
-        <div class="op-dungeon-list">
-          ${sortedDungeons.map((d, i) => `
-            <div class="op-dungeon-row" style="border-left:4px solid ${colors[i]};background:${colors[i]}08;">
-              <span class="op-dungeon-name" style="color:${colors[i]}">${d.name}</span>
-              <span>
-                <span class="op-dungeon-level" style="color:${colors[i]}">${d.level}</span>
-                <span class="op-dungeon-level-suffix">层</span>
-              </span>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-
-      <!-- 铁钥匙人数 -->
-      <div class="op-section">
-        <div class="op-section-title">铁钥匙人数</div>
-        <div class="op-iron-row">
-          <div class="op-iron-card">
-            <div class="op-iron-value gold">${l.iron24}</div>
-            <div class="op-iron-label">24 铁钥匙</div>
-          </div>
-          <div class="op-iron-card">
-            <div class="op-iron-value orange">${l.iron23}</div>
-            <div class="op-iron-label">23 铁钥匙</div>
-          </div>
         </div>
       </div>
 
@@ -489,52 +463,8 @@ function initChartForSlide(index) {
   setTimeout(() => {
     switch (index) {
       case 1: initScoreTrendChart(); break;
-      case 6: initIronChart(); break;
     }
   }, 100);
-}
-
-/* ==================== 主题切换 ==================== */
-
-/** 当前激活的主题名称 */
-let currentTheme = 'default';
-
-/**
- * 应用指定主题，更新页面 data-theme 和按钮激活态
- * @param {string} theme - 主题名（'default' | 'emerald' | 'frost' | 'shadow' | 'blazing'）
- */
-function setTheme(theme) {
-  currentTheme = theme;
-  if (theme === 'default') {
-    document.documentElement.removeAttribute('data-theme');
-  } else {
-    document.documentElement.setAttribute('data-theme', theme);
-  }
-  // 更新按钮激活状态
-  document.querySelectorAll('.theme-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.themeVal === theme);
-  });
-  // 持久化
-  try { localStorage.setItem('wow-theme', theme); } catch (_) {}
-}
-
-/**
- * 初始化主题切换：加载已保存的主题 + 绑定事件
- */
-function initThemes() {
-  const saved = (() => {
-    try { return localStorage.getItem('wow-theme'); } catch (_) { return null; }
-  })();
-  // 应用保存的主题
-  if (saved && saved !== 'default') {
-    setTheme(saved);
-  } else {
-    setTheme('default');
-  }
-  // 绑定按钮事件
-  document.querySelectorAll('.theme-btn').forEach(btn => {
-    btn.addEventListener('click', () => setTheme(btn.dataset.themeVal));
-  });
 }
 
 /* ==================== 初始化入口 ==================== */
@@ -582,7 +512,6 @@ function initNavigation() {
  */
 async function main() {
   initNavigation();
-  initThemes();
 
   await loadData();
   if (!reportData) return;
