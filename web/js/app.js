@@ -23,6 +23,67 @@ let dots = [];
 let reportData = null;
 
 /**
+ * 获取前一天的数据（用于计算变化）
+ * @returns {object|null} 前一天数据
+ */
+function previousDay() {
+  if (!reportData || !reportData.daily.length || reportData.daily.length < 2) return null;
+  return reportData.daily[reportData.daily.length - 2];
+}
+
+/**
+ * 格式化人数：大于 10000 用万，否则加千分位
+ * @param {number} n
+ * @returns {string}
+ */
+function formatPop(n) {
+  if (n == null || isNaN(n) || n === 0) return '';
+  if (n >= 10000) return (n / 10000).toFixed(1).replace(/\.0$/, '') + '万';
+  return n.toLocaleString('zh-CN');
+}
+
+/**
+ * 根据总人数计算分位人数
+ * @param {number} total - 总人口
+ * @param {number} pct - 分位（0.01=1%, 0.001=0.1%, 等）
+ * @returns {number|null}
+ */
+function pctPop(total, pct) {
+  if (!total || total <= 0) return null;
+  return Math.round(total * pct);
+}
+function formatDelta(current, previous) {
+  if (current == null || previous == null || isNaN(current) || isNaN(previous)) return null;
+  const diff = current - previous;
+  if (Math.abs(diff) < 0.001) return '0';
+  return diff > 0 ? `+${diff.toFixed(2)}` : diff.toFixed(2);
+}
+
+/**
+ * 生成变化指示器 HTML（股票风格三角）
+ * @param {number} current - 当前值
+ * @param {number} previous - 前一天值
+ * @param {string} [unit=''] - 可选单位
+ * @returns {string} HTML 字符串
+ */
+function deltaHtml(current, previous, unit = '') {
+  const delta = formatDelta(current, previous);
+  if (delta === null) return '';
+  const num = parseFloat(delta);
+  // 没变化不显示
+  if (num === 0) return '';
+  let cls, icon;
+  if (num > 0) {
+    cls = 'delta-up';
+    icon = '▲';
+  } else {
+    cls = 'delta-down';
+    icon = '▼';
+  }
+  return `<span class="${cls}"><span class="delta-icon">${icon}</span> ${delta}${unit}</span>`;
+}
+
+/**
  * 根据专精名生成图标 <img> 标签
  * 直接使用 Excel 中填入的名称（如 D增辉/H神牧/T熊T）拼接文件名
  * @param {string} name - 专精名（需与 images/ 中文件名一致）
@@ -184,7 +245,7 @@ function renderEco() {
 
   lineupEl.innerHTML = reportData.nationalTeam.map(group => `
     <div class="lineup-group">
-      <div class="lineup-group-title">${group.group}</div>
+      <div class="lineup-group-title">阵容</div>
       <div class="lineup-members">
         ${group.members.map(m => `
           <div class="lineup-member-card">
@@ -223,6 +284,73 @@ function renderDungeonsCompact() {
       <span class="dungeon-compact-level">${d.level}<span class="dungeon-compact-suffix">层</span></span>
     </div>
   `).join('');
+}
+
+/**
+ * 渲染分数大盘（Slide 2）
+ */
+function renderScoreDashboard() {
+  const l = latest();
+  if (!l) return;
+
+  const prev = previousDay();
+
+  // 最高分数
+  const heroEl = document.getElementById('s2-hero');
+  if (heroEl) {
+    const prevScore = prev ? prev.rank1.score : null;
+    heroEl.innerHTML = `
+      <div class="s2-hero-value">${l.rank1.score}</div>
+      <div class="s2-hero-label">最高分数</div>
+      ${(prevScore != null && formatDelta(l.rank1.score, prevScore) !== '0') ? `<div class="s2-hero-delta">${deltaHtml(l.rank1.score, prevScore)}</div>` : ''}
+    `;
+  }
+
+  const total = l.totalPopulation;
+  const pop01 = l.pop01 || pctPop(total, 0.001);
+  const pop1 = l.pop1 || pctPop(total, 0.01);
+
+  // 0.1% 分数线
+  const pct01El = document.getElementById('s2-pct01');
+  if (pct01El) {
+    const prev01 = prev ? prev.top01Pct : null;
+    const prev009 = prev && prev.top009Pct ? prev.top009Pct : null;
+    pct01El.innerHTML = `
+      <div class="s2-pct-label">0.1% 分数线</div>
+      <div class="s2-pct-value-row">
+        <span class="s2-pct-value">${l.top01Pct}</span>
+        ${prev01 != null ? `<span class="s2-pct-delta">${deltaHtml(l.top01Pct, prev01)}</span>` : ''}
+      </div>
+      ${pop01 ? `<div class="s2-pct-pop">≈ ${formatPop(pop01)} 人</div>` : ''}
+      ${l.top009Pct != null ? `
+      <div class="s2-pct-sub">
+        <span class="s2-sub-dot"></span>0.09% 分数线
+        <strong>${l.top009Pct}</strong>
+        ${prev009 != null ? `<span class="s2-sub-delta">${deltaHtml(l.top009Pct, prev009)}</span>` : ''}
+      </div>` : ''}
+    `;
+  }
+
+  // 1% 分数线
+  const pct1El = document.getElementById('s2-pct1');
+  if (pct1El) {
+    const prev1 = prev ? prev.top1Pct : null;
+    const prev09 = prev && prev.top09Pct ? prev.top09Pct : null;
+    pct1El.innerHTML = `
+      <div class="s2-pct-label">1% 分数线</div>
+      <div class="s2-pct-value-row">
+        <span class="s2-pct-value">${l.top1Pct}</span>
+        ${prev1 != null ? `<span class="s2-pct-delta">${deltaHtml(l.top1Pct, prev1)}</span>` : ''}
+      </div>
+      ${pop1 ? `<div class="s2-pct-pop">≈ ${formatPop(pop1)} 人</div>` : ''}
+      ${l.top09Pct != null ? `
+      <div class="s2-pct-sub">
+        <span class="s2-sub-dot"></span>0.9% 分数线
+        <strong>${l.top09Pct}</strong>
+        ${prev09 != null ? `<span class="s2-sub-delta">${deltaHtml(l.top09Pct, prev09)}</span>` : ''}
+      </div>` : ''}
+    `;
+  }
 }
 
 /**
@@ -272,6 +400,7 @@ function renderFaith() {
  */
 function renderAll() {
   renderOverview();
+  renderScoreDashboard();
   renderRank1();
   renderEco();
   renderFaith();
@@ -296,6 +425,68 @@ function toggleOnePager() {
     renderOnePager();
     window.scrollTo(0, 0);
   }
+}
+
+/**
+ * 生成一图流分数板块 HTML
+ * @param {object} l - 最新一天数据
+ * @returns {string} HTML
+ */
+function buildOpScoreSection(l) {
+  const prev = previousDay();
+  const total = l.totalPopulation;
+
+  const heroDelta = prev ? deltaHtml(l.rank1.score, prev.rank1.score) : '';
+  const pct01Delta = prev ? deltaHtml(l.top01Pct, prev.top01Pct) : '';
+  const pct1Delta = prev ? deltaHtml(l.top1Pct, prev.top1Pct) : '';
+  const pct009Delta = (prev && l.top009Pct != null && prev.top009Pct != null) ? deltaHtml(l.top009Pct, prev.top009Pct) : '';
+  const pct09Delta = (prev && l.top09Pct != null && prev.top09Pct != null) ? deltaHtml(l.top09Pct, prev.top09Pct) : '';
+
+  const pop01 = l.pop01 || pctPop(total, 0.001);
+  const pop1 = l.pop1 || pctPop(total, 0.01);
+
+  return `
+    <div class="op-section">
+      <div class="op-section-title">分数行情</div>
+      <div class="op-score-dashboard">
+        <!-- 最高分数 -->
+        <div class="op-hero-card">
+          <div class="op-hero-value">${l.rank1.score}</div>
+          <div class="op-hero-label">最高分数</div>
+          ${heroDelta ? `<div class="op-hero-delta">${heroDelta}</div>` : ''}
+        </div>
+        <!-- 核心百分比双卡 -->
+        <div class="op-pct-row">
+          <div class="op-pct-card op-pct-purple">
+            <div class="op-pct-card-label">0.1% 分数线</div>
+            <div class="op-pct-card-value-row">
+              <span class="op-pct-card-value">${l.top01Pct}</span>
+              ${pct01Delta ? `<span class="op-pct-card-delta">${pct01Delta}</span>` : ''}
+            </div>
+            ${pop01 ? `<div class="op-pct-card-pop">≈ ${formatPop(pop01)} 人</div>` : ''}
+            ${l.top009Pct != null ? `
+            <div class="op-pct-sub">
+              <span class="op-pct-sub-dot"></span>0.09% 分数线 <strong>${l.top009Pct}</strong> ${pct009Delta}
+            </div>` : ''}
+          </div>
+          <div class="op-pct-card op-pct-gold">
+            <div class="op-pct-card-label">1% 分数线</div>
+            <div class="op-pct-card-value-row">
+              <span class="op-pct-card-value">${l.top1Pct}</span>
+              ${pct1Delta ? `<span class="op-pct-card-delta">${pct1Delta}</span>` : ''}
+            </div>
+            ${pop1 ? `<div class="op-pct-card-pop">≈ ${formatPop(pop1)} 人</div>` : ''}
+            ${l.top09Pct != null ? `
+            <div class="op-pct-sub">
+              <span class="op-pct-sub-dot op-sub-gold"></span>0.9% 分数线 <strong>${l.top09Pct}</strong> ${pct09Delta}
+            </div>` : ''}
+          </div>
+        </div>
+      </div>
+      <!-- 一周趋势图 -->
+      <div class="op-chart-box" id="op-chart-trend"></div>
+    </div>
+  `;
 }
 
 /**
@@ -345,24 +536,8 @@ function renderOnePager() {
         </div>
       </div>
 
-      <!-- 分数概览 -->
-      <div class="op-section">
-        <div class="op-section-title">分数</div>
-        <div class="op-score-row">
-          <div class="op-score-card accent-gold">
-            <div class="op-score-value">${l.rank1.score}</div>
-            <div class="op-score-label">最高分数</div>
-          </div>
-          <div class="op-score-card accent-orange">
-            <div class="op-score-value">${l.top01Pct}</div>
-            <div class="op-score-label">0.1% 分数线</div>
-          </div>
-          <div class="op-score-card accent-blue">
-            <div class="op-score-value">${l.top1Pct}</div>
-            <div class="op-score-label">1% 分数线</div>
-          </div>
-        </div>
-      </div>
+      <!-- 分数行情（新设计） -->
+      ${buildOpScoreSection(l)}
 
       <!-- 世界TOP + 限时最高层数（合并） -->
       <div class="op-section">
@@ -396,7 +571,7 @@ function renderOnePager() {
         <div class="op-lineup-row">
           ${reportData.nationalTeam.map(group => `
             <div class="op-lineup-group">
-              <div class="op-lineup-group-title">${group.group}</div>
+              <div class="op-lineup-group-title">阵容</div>
               <div class="op-lineup-members-row">
               ${group.members.map(m => `
                 <div class="op-lineup-member">
@@ -450,6 +625,117 @@ function renderOnePager() {
 
     </div>
   `;
+
+  // 一图流中的趋势图
+  setTimeout(() => initOpTrendChart(), 150);
+}
+
+/**
+ * 初始化一图流中的趋势图（复用 Slide 2 图表逻辑）
+ */
+function initOpTrendChart() {
+  const dom = document.getElementById('op-chart-trend');
+  if (!dom || !reportData || !reportData.daily.length) return;
+
+  let chart = dom._echartInstance;
+  if (!chart) {
+    chart = echarts.init(dom);
+    dom._echartInstance = chart;
+  }
+
+  const recent = reportData.daily.slice(-7);
+  const dates = recent.map(d => d.date.substring(4, 8));
+  const lastIdx = recent.length - 1;
+
+  function makeHighlightData(values, normalSize, hlSize, color) {
+    return values.map((v, i) => i === lastIdx
+      ? {
+          value: v,
+          symbolSize: hlSize,
+          itemStyle: {
+            borderColor: '#000000',
+            borderWidth: 2,
+            shadowBlur: 0,
+            shadowColor: '#000000',
+            shadowOffsetX: 3,
+            shadowOffsetY: 3,
+            color: color
+          }
+        }
+      : v);
+  }
+
+  const option = {
+    ...neoTheme,
+    backgroundColor: '#FFFFFF',
+    grid: { top: 40, right: 60, bottom: 50, left: 60 },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: '#FFFFFF',
+      borderColor: '#000000',
+      borderWidth: 3,
+      textStyle: { color: '#000000', fontSize: 14, fontWeight: 700 },
+      extraCssText: 'box-shadow: 6px 6px 0px 0px #000000;'
+    },
+    xAxis: {
+      type: 'category',
+      data: dates,
+      axisLine: { lineStyle: { color: '#000000', width: 3 } },
+      axisLabel: { color: '#000000', fontSize: 14, fontWeight: 700 },
+      axisTick: { show: true, lineStyle: { color: '#000000', width: 2 } }
+    },
+    yAxis: {
+      type: 'value',
+      name: '分数',
+      nameTextStyle: { color: '#000000', fontSize: 12, fontWeight: 900 },
+      axisLabel: { color: '#000000', fontSize: 14, fontWeight: 700 },
+      axisLine: { lineStyle: { color: '#000000', width: 3 } },
+      splitLine: { lineStyle: { color: '#000000', width: 1, type: 'dashed', opacity: 0.2 } },
+      min: function (val) { return Math.floor(val.min / 100) * 100 - 50; },
+      max: function (val) { return Math.ceil(val.max / 100) * 100 + 50; }
+    },
+    series: [
+      {
+        name: '0.1% 分数线',
+        type: 'line',
+        data: makeHighlightData(
+          recent.map(d => d.top01Pct),
+          10, 16, neoColors.pct01
+        ),
+        lineStyle: { color: neoColors.pct01, width: 4 },
+        itemStyle: { color: neoColors.pct01, borderColor: '#000000', borderWidth: 2 },
+        symbol: 'diamond',
+        symbolSize: 12,
+        label: {
+          show: true, color: '#000000', fontSize: 15, fontWeight: 900,
+          position: 'top',
+          backgroundColor: '#FFFFFF', borderColor: '#000000', borderWidth: 2,
+          padding: [3, 6], formatter: '{c}'
+        }
+      },
+      {
+        name: '1% 分数线',
+        type: 'line',
+        data: makeHighlightData(
+          recent.map(d => d.top1Pct),
+          10, 16, neoColors.pct1
+        ),
+        lineStyle: { color: neoColors.pct1, width: 4 },
+        itemStyle: { color: neoColors.pct1, borderColor: '#000000', borderWidth: 2 },
+        symbol: 'triangle',
+        symbolSize: 12,
+        label: {
+          show: true, color: '#000000', fontSize: 15, fontWeight: 900,
+          position: 'bottom',
+          backgroundColor: '#FFFFFF', borderColor: '#000000', borderWidth: 2,
+          padding: [3, 6], formatter: '{c}'
+        }
+      }
+    ]
+  };
+
+  chart.setOption(option, true);
+  chart.resize();
 }
 
 /* ==================== 图表调度 ==================== */

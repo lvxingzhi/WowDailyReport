@@ -336,7 +336,203 @@ body::before {
 }
 
 /* ============================================
-   Slide 2: 图表通用
+   Slide 2: 分数大盘 + 趋势图
+   ============================================ */
+.s2-score-dashboard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+/* 分数行：最高分数 (左大卡片) + 核心百分比 (右) */
+.s2-score-row {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* 最高分数卡片 — 最突出 */
+.s2-hero-card {
+  flex: 0 0 340px;
+  background: var(--neo-white);
+  border: var(--border);
+  box-shadow: var(--shadow-lg);
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transform: rotate(-0.5deg);
+  position: relative;
+}
+
+.s2-hero-card .s2-hero-value {
+  font-size: 96px;
+  font-weight: 900;
+  color: var(--neo-red);
+  line-height: 0.95;
+  -webkit-text-stroke: 2px #000000;
+  font-variant-numeric: tabular-nums;
+}
+
+.s2-hero-card .s2-hero-label {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--neo-black);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: var(--neo-yellow);
+  border: var(--border);
+  padding: 6px 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.s2-hero-card .s2-hero-delta {
+  font-size: 22px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 16px;
+  border: var(--border-thin);
+}
+
+/* 百分比卡片组 */
+.s2-pct-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 核心百分比双卡 */
+.s2-pct-core {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+}
+
+/* 一张百分比卡片 */
+.s2-pct-card {
+  flex: 1;
+  background: var(--neo-white);
+  border: var(--border);
+  box-shadow: var(--shadow-md);
+  padding: 22px 28px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  transition: transform 0.15s ease-out;
+}
+
+.s2-pct-card:nth-child(1) { transform: rotate(-0.3deg); }
+.s2-pct-card:nth-child(2) { transform: rotate(0.3deg); }
+
+.s2-pct-card .s2-pct-label {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--neo-black);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: var(--neo-yellow);
+  border: var(--border);
+  padding: 6px 18px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 6px;
+}
+
+.s2-pct-card .s2-pct-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.s2-pct-card .s2-pct-value {
+  font-size: 52px;
+  font-weight: 900;
+  color: var(--neo-black);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.s2-pct-card.accent-purple .s2-pct-value { color: #7C3AED; }
+.s2-pct-card.accent-gold .s2-pct-value { color: #D97706; }
+
+.s2-pct-card .s2-pct-delta {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.s2-pct-card .s2-pct-pop {
+  font-size: 13px;
+  font-weight: 700;
+  color: #666;
+  letter-spacing: 1px;
+}
+
+/* 子分数线 (0.09% / 0.9%) 嵌入卡片底部 */
+.s2-pct-card .s2-pct-sub {
+  width: 100%;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px dashed #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #666;
+}
+
+.s2-pct-card .s2-pct-sub .s2-sub-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border: 2px solid #000000;
+  flex-shrink: 0;
+}
+
+.s2-pct-card.accent-purple .s2-pct-sub .s2-sub-dot { background: #C4B5FD; }
+.s2-pct-card.accent-gold .s2-pct-sub .s2-sub-dot { background: #F59E0B; }
+
+.s2-pct-card .s2-pct-sub strong {
+  color: var(--neo-black);
+  font-weight: 900;
+  font-size: 18px;
+}
+
+.s2-pct-card .s2-pct-sub .s2-sub-delta {
+  font-size: 13px;
+  font-weight: 900;
+}
+
+/* ============================================
+   Delta 变化指示器（股票风格）
+   ============================================ */
+.delta-up {
+  color: #16A34A;
+}
+
+.delta-down {
+  color: #DC2626;
+}
+
+.delta-flat {
+  color: #888;
+}
+
+.delta-icon {
+  font-size: 0.85em;
+}
+
+/* ============================================
+   Slide 2: 图表通用（保留）
    ============================================ */
 .chart-box {
   width: 100%;
@@ -1009,7 +1205,7 @@ body.one-pager-mode #one-pager {
   font-weight: 900 !important;
 }
 
-/* 分数总览 */
+/* 分数总览（旧版保留兼容） */
 .op-score-row {
   display: flex;
   gap: 16px;
@@ -1028,9 +1224,11 @@ body.one-pager-mode #one-pager {
 .op-score-card:nth-child(1) { transform: rotate(-1deg); }
 .op-score-card:nth-child(2) { transform: rotate(0.5deg); }
 .op-score-card:nth-child(3) { transform: rotate(-0.5deg); }
+.op-score-card:nth-child(4) { transform: rotate(1deg); }
+.op-score-card:nth-child(5) { transform: rotate(-0.3deg); }
 
 .op-score-value {
-  font-size: 44px;
+  font-size: 30px;
   font-weight: 900;
   line-height: 1;
   margin-bottom: 6px;
@@ -1049,12 +1247,206 @@ body.one-pager-mode #one-pager {
   color: var(--neo-black);
 }
 
+.op-score-card.accent-green .op-score-value {
+  color: #82C878;
+  -webkit-text-stroke: 1px #000000;
+}
+
+.op-score-card.accent-coral .op-score-value {
+  color: #FF8C42;
+}
+
 .op-score-label {
   font-size: 13px;
   font-weight: 700;
   color: var(--neo-black);
   letter-spacing: 1px;
   text-transform: uppercase;
+}
+
+/* ============================================
+   一图流 · 分数大盘（新设计）
+   ============================================ */
+.op-score-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* 最高分数卡片 — 横条型 */
+.op-hero-card {
+  background: var(--neo-white);
+  border: var(--border);
+  box-shadow: var(--shadow-md);
+  padding: 18px 32px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  transform: rotate(-0.3deg);
+}
+
+.op-hero-card .op-hero-value {
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--neo-red);
+  line-height: 1;
+  -webkit-text-stroke: 2px #000000;
+  font-variant-numeric: tabular-nums;
+}
+
+.op-hero-card .op-hero-label {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--neo-black);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: var(--neo-yellow);
+  border: var(--border);
+  padding: 5px 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.op-hero-card .op-hero-delta {
+  font-size: 16px;
+  font-weight: 900;
+  padding: 3px 10px;
+  border: var(--border-thin);
+}
+
+/* 核心百分比双卡 */
+.op-pct-row {
+  display: flex;
+  gap: 16px;
+}
+
+.op-pct-card {
+  flex: 1;
+  background: var(--neo-white);
+  border: var(--border);
+  box-shadow: var(--shadow-md);
+  padding: 20px 24px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.op-pct-card:first-child { transform: rotate(-0.3deg); }
+.op-pct-card:last-child { transform: rotate(0.3deg); }
+
+.op-pct-card .op-pct-card-label {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--neo-black);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: var(--neo-yellow);
+  border: var(--border);
+  padding: 5px 16px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 6px;
+}
+
+.op-pct-card .op-pct-card-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.op-pct-card .op-pct-card-value {
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--neo-black);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.op-pct-card.op-pct-purple .op-pct-card-value { color: #7C3AED; }
+.op-pct-card.op-pct-gold .op-pct-card-value { color: #D97706; }
+
+.op-pct-card .op-pct-card-delta {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.op-pct-card .op-pct-card-pop {
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+  letter-spacing: 1px;
+}
+
+/* 副产品 (0.09% / 0.9%) 嵌入卡片底部 */
+.op-pct-sub {
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 2px dashed #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #666;
+}
+
+.op-pct-sub strong {
+  color: var(--neo-black);
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.op-pct-sub-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #C4B5FD;
+  border: 2px solid #000000;
+  flex-shrink: 0;
+}
+
+.op-pct-sub-dot.op-sub-gold {
+  background: #F59E0B;
+}
+
+.op-pct-sub-pop {
+  color: #999;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+/* 总人数横幅 */
+.op-pop-total {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #666;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+  padding: 6px 14px;
+  background: var(--neo-cream);
+  border: var(--border-thin);
+  display: inline-block;
+  width: 100%;
+}
+
+.op-pop-total strong {
+  color: var(--neo-black);
+}
+
+/* 一图流图表 */
+.op-chart-box {
+  width: 100%;
+  height: 440px;
+  background: var(--neo-white);
+  border: var(--border);
+  box-shadow: var(--shadow-md);
+  padding: 12px;
+  margin-top: 12px;
 }
 
 /* TOP 队伍 */

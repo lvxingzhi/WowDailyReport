@@ -203,14 +203,33 @@ def fetch_dungeon_levels():
 
 
 def fetch_season_cutoffs():
-    """抓取中国区 0.1% / 1% 分数线。返回 (top01pct, top1pct)"""
+    """抓取中国区 0.1% / 1% 分数线 + 人数。返回 (top01pct, top1pct, total, pop01, pop1)"""
     url = (f"https://raider.io/api/v1/mythic-plus/season-cutoffs"
            f"?season={SEASON_SLUG}&region=cn")
     data = api_get(url)
     cutoffs = data["cutoffs"]
     top01 = cutoffs["p999"]["all"]["quantileMinValue"]
     top1 = cutoffs["p990"]["all"]["quantileMinValue"]
-    return round(top01, 2), round(top1, 2)
+    total = cutoffs["p999"]["all"]["totalPopulationCount"]
+    pop01 = cutoffs["p999"]["all"]["quantilePopulationCount"]
+    pop1 = cutoffs["p990"]["all"]["quantilePopulationCount"]
+    return round(top01, 2), round(top1, 2), total, pop01, pop1
+
+
+def fetch_exact_rank_score(total, pct):
+    """
+    精确查排行榜第 total*pct 名分数。
+    返回 (score, rank) 或 (None, 0)
+    """
+    rank = int(total * pct)
+    page = (rank - 1) // 40
+    idx = (rank - 1) % 40
+    url = (f"https://raider.io/api/mythic-plus/rankings/characters"
+           f"?season={SEASON_SLUG}&region=cn&class=all&role=all&page={page}&pageSize=40")
+    data = api_get(url)
+    ranked = data["rankings"]["rankedCharacters"]
+    score = ranked[idx]["score"]
+    return round(score, 2), rank
 
 
 def fetch_top_team():
@@ -338,8 +357,21 @@ def main():
 
     # 2. 分数线（中国区）
     print("📊 分数线 (CN)...")
-    top01pct, top1pct = fetch_season_cutoffs()
-    print(f"  0.1%: {top01pct}, 1%: {top1pct}")
+    top01pct, top1pct, total_pop, pop01, pop1 = fetch_season_cutoffs()
+    print(f"  0.1%: {top01pct}, 1%: {top1pct}  (总人数={total_pop}, 0.1%人数={pop01}, 1%人数={pop1})")
+
+    # 2.5 精确分数线（查排行榜第N名）
+    def try_exact(pct, label):
+        try:
+            score, rank = fetch_exact_rank_score(total_pop, pct)
+            print(f"  {label}: {score} (排名={rank})")
+            return score
+        except Exception as e:
+            print(f"  ⚠️ {label}: 抓取失败 ({e})")
+            return None
+
+    top09pct = try_exact(0.009, "0.9%")
+    top009pct = try_exact(0.0009, "0.09%")
     print()
 
     # 3. 副本层数（全球）
@@ -366,7 +398,8 @@ def main():
     # 列号映射：
     # A=1(日期), B=2(赛季), C=3(赛季周), D=4(剩余周),
     # E=5(最高分), F=6(0.1%), G=7(1%), H=8(队伍),
-    # I-P=9~16(副本), Q-BF=17~56(专精)
+    # I-P=9~16(副本), Q-BD=17~56(专精),
+    # BE=57(0.9%), BF=58(0.09%), BG=59(总人数)
 
     # 从已有数据继承赛季名、推算赛季周
     wb = openpyxl.load_workbook(excel_path)
@@ -401,6 +434,19 @@ def main():
     # 专精分数
     for col, info in spec_scores.items():
         row_data[col] = round(info["score"], 1)
+
+    # 精确分数线（列 BE=57/BF=58，在专精之后）
+    if top09pct is not None:
+        row_data[57] = top09pct
+    if top009pct is not None:
+        row_data[58] = top009pct
+
+    # 总人数（列 BG=59）
+    row_data[59] = total_pop
+    # 0.1%人数（列 BH=60）
+    row_data[60] = pop01
+    # 1%人数（列 BI=61）
+    row_data[61] = pop1
 
     # 7. 写入 Excel
     append_to_excel(excel_path, row_data)

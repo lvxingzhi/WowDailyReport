@@ -14,7 +14,9 @@ const neoTheme = {
 const neoColors = {
   top: '#FF6B6B',       // 最高分数 — 红
   pct01: '#C4B5FD',     // 0.1% 分数线 — 紫
+  pct09: '#82C878',     // 0.9% 分数线 — 绿
   pct1: '#FFD93D',      // 1% 分数线 — 黄
+  pct009: '#F59E0B',    // 0.09% 分数线 — 金橙
   bar: '#000000',       // 柱状图 — 黑
   barAccent: '#FF6B6B', // 柱状图高亮 — 红
 };
@@ -36,8 +38,9 @@ function initScoreTrendChart() {
 
   if (!reportData || !reportData.daily.length) return;
 
-  const dates = reportData.daily.map(d => d.date.substring(4, 8));
-  const lastIdx = reportData.daily.length - 1;
+  const recent = reportData.daily.slice(-7);
+  const dates = recent.map(d => d.date.substring(4, 8));
+  const lastIdx = recent.length - 1;
 
   /** 最后一个数据点加粗高亮 */
   function makeHighlightData(values, normalSize, hlSize, color) {
@@ -61,27 +64,27 @@ function initScoreTrendChart() {
   const option = {
     ...neoTheme,
     backgroundColor: '#FFFFFF',
-    grid: { top: 40, right: 80, bottom: 60, left: 80 },
+    grid: { top: 30, right: 60, bottom: 50, left: 70 },
     tooltip: {
       trigger: 'axis',
       backgroundColor: '#FFFFFF',
       borderColor: '#000000',
       borderWidth: 3,
-      textStyle: { color: '#000000', fontSize: 16, fontWeight: 700 },
+      textStyle: { color: '#000000', fontSize: 14, fontWeight: 700 },
       extraCssText: 'box-shadow: 6px 6px 0px 0px #000000;'
     },
     xAxis: {
       type: 'category',
       data: dates,
       axisLine: { lineStyle: { color: '#000000', width: 3 } },
-      axisLabel: { color: '#000000', fontSize: 16, fontWeight: 700 },
+      axisLabel: { color: '#000000', fontSize: 14, fontWeight: 700 },
       axisTick: { show: true, lineStyle: { color: '#000000', width: 2 } }
     },
     yAxis: {
       type: 'value',
       name: '分数',
-      nameTextStyle: { color: '#000000', fontSize: 14, fontWeight: 900 },
-      axisLabel: { color: '#000000', fontSize: 16, fontWeight: 700 },
+      nameTextStyle: { color: '#000000', fontSize: 12, fontWeight: 900 },
+      axisLabel: { color: '#000000', fontSize: 14, fontWeight: 700 },
       axisLine: { lineStyle: { color: '#000000', width: 3 } },
       splitLine: { lineStyle: { color: '#000000', width: 1, type: 'dashed', opacity: 0.2 } },
       min: function (val) { return Math.floor(val.min / 100) * 100 - 50; },
@@ -89,79 +92,39 @@ function initScoreTrendChart() {
     },
     series: [
       {
-        name: '最高分数',
-        type: 'line',
-        data: makeHighlightData(
-          reportData.daily.map(d => d.rank1.score),
-          12, 20, neoColors.top
-        ),
-        lineStyle: { color: neoColors.top, width: 4 },
-        itemStyle: {
-          color: neoColors.top,
-          borderColor: '#000000',
-          borderWidth: 2
-        },
-        symbol: 'circle',
-        symbolSize: 12,
-        label: {
-          show: true,
-          color: '#000000',
-          fontSize: 16,
-          fontWeight: 900,
-          position: 'top',
-          backgroundColor: '#FFFFFF',
-          borderColor: '#000000',
-          borderWidth: 2,
-          padding: [4, 8],
-          formatter: '{c}'
-        }
-      },
-      {
         name: '0.1% 分数线',
         type: 'line',
         data: makeHighlightData(
-          reportData.daily.map(d => d.top01Pct),
-          10, 16, neoColors.pct01
+          recent.map(d => d.top01Pct),
+          10, 18, neoColors.pct01
         ),
-        lineStyle: { color: neoColors.pct01, width: 3, type: 'dashed' },
-        itemStyle: {
-          color: neoColors.pct01,
-          borderColor: '#000000',
-          borderWidth: 2
-        },
+        lineStyle: { color: neoColors.pct01, width: 4 },
+        itemStyle: { color: neoColors.pct01, borderColor: '#000000', borderWidth: 2 },
         symbol: 'diamond',
-        symbolSize: 10,
+        symbolSize: 12,
         label: {
-          show: true,
-          color: '#000000',
-          fontSize: 14,
-          fontWeight: 700,
+          show: true, color: '#000000', fontSize: 16, fontWeight: 900,
           position: 'top',
-          formatter: '{c}'
+          backgroundColor: '#FFFFFF', borderColor: '#000000', borderWidth: 2,
+          padding: [4, 8], formatter: '{c}'
         }
       },
       {
         name: '1% 分数线',
         type: 'line',
         data: makeHighlightData(
-          reportData.daily.map(d => d.top1Pct),
-          10, 16, neoColors.pct1
+          recent.map(d => d.top1Pct),
+          10, 18, neoColors.pct1
         ),
-        lineStyle: { color: neoColors.pct1, width: 3 },
-        itemStyle: {
-          color: neoColors.pct1,
-          borderColor: '#000000',
-          borderWidth: 2
-        },
+        lineStyle: { color: neoColors.pct1, width: 4 },
+        itemStyle: { color: neoColors.pct1, borderColor: '#000000', borderWidth: 2 },
         symbol: 'triangle',
-        symbolSize: 10,
+        symbolSize: 12,
         label: {
-          show: true,
-          color: '#000000',
-          fontSize: 14,
-          fontWeight: 700,
+          show: true, color: '#000000', fontSize: 16, fontWeight: 900,
           position: 'bottom',
-          formatter: '{c}'
+          backgroundColor: '#FFFFFF', borderColor: '#000000', borderWidth: 2,
+          padding: [4, 8], formatter: '{c}'
         }
       }
     ]

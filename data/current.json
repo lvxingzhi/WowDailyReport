@@ -1,7 +1,7 @@
 {
   "meta": {
     "season": "至暗之夜S1",
-    "generatedAt": "2026-07-29T11:33:55",
+    "generatedAt": "2026-07-29T18:20:22",
     "dataCount": 7,
     "latestDate": "20260729"
   },
@@ -39,7 +39,12 @@
         ]
       },
       "top1Pct": 3955.63,
+      "top09Pct": null,
+      "top009Pct": null,
       "top01Pct": 4210.72,
+      "totalPopulation": null,
+      "pop01": null,
+      "pop1": null,
       "faithSpecs": [
         {
           "name": "D邪DK",
@@ -200,6 +205,26 @@
         {
           "name": "D湮灭",
           "score": 3993.9
+        },
+        {
+          "name": "0.9%分数",
+          "score": 0.0
+        },
+        {
+          "name": "0.09%分数",
+          "score": 0.0
+        },
+        {
+          "name": "总人数",
+          "score": 0.0
+        },
+        {
+          "name": "0.1%人数",
+          "score": 0.0
+        },
+        {
+          "name": "1%人数",
+          "score": 0.0
         }
       ],
       "dungeons": [
@@ -270,7 +295,12 @@
         ]
       },
       "top1Pct": 3962.17,
+      "top09Pct": null,
+      "top009Pct": null,
       "top01Pct": 4219.98,
+      "totalPopulation": null,
+      "pop01": null,
+      "pop1": null,
       "faithSpecs": [
         {
           "name": "D邪DK",
@@ -431,6 +461,26 @@
         {
           "name": "D湮灭",
           "score": 3993.9
+        },
+        {
+          "name": "0.9%分数",
+          "score": 0.0
+        },
+        {
+          "name": "0.09%分数",
+          "score": 0.0
+        },
+        {
+          "name": "总人数",
+          "score": 0.0
+        },
+        {
+          "name": "0.1%人数",
+          "score": 0.0
+        },
+        {
+          "name": "1%人数",
+          "score": 0.0
         }
       ],
       "dungeons": [
@@ -501,7 +551,12 @@
         ]
       },
       "top1Pct": 3969.56,
+      "top09Pct": null,
+      "top009Pct": null,
       "top01Pct": 4230.52,
+      "totalPopulation": null,
+      "pop01": null,
+      "pop1": null,
       "faithSpecs": [
         {
           "name": "D邪DK",
@@ -662,6 +717,26 @@
         {
           "name": "D湮灭",
           "score": 3993.9
+        },
+        {
+          "name": "0.9%分数",
+          "score": 0.0
+        },
+        {
+          "name": "0.09%分数",
+          "score": 0.0
+        },
+        {
+          "name": "总人数",
+          "score": 0.0
+        },
+        {
+          "name": "0.1%人数",
+          "score": 0.0
+        },
+        {
+          "name": "1%人数",
+          "score": 0.0
         }
       ],
       "dungeons": [
@@ -732,7 +807,12 @@
         ]
       },
       "top1Pct": 3969.56,
+      "top09Pct": null,
+      "top009Pct": null,
       "top01Pct": 4230.52,
+      "totalPopulation": null,
+      "pop01": null,
+      "pop1": null,
       "faithSpecs": [
         {
           "name": "D邪DK",
@@ -893,6 +973,26 @@
         {
           "name": "D湮灭",
           "score": 3993.9
+        },
+        {
+          "name": "0.9%分数",
+          "score": 0.0
+        },
+        {
+          "name": "0.09%分数",
+          "score": 0.0
+        },
+        {
+          "name": "总人数",
+          "score": 0.0
+        },
+        {
+          "name": "0.1%人数",
+          "score": 0.0
+        },
+        {
+          "name": "1%人数",
+          "score": 0.0
         }
       ],
       "dungeons": [
@@ -947,7 +1047,12 @@
         ]
       },
       "top1Pct": 3985.21,
+      "top09Pct": null,
+      "top009Pct": null,
       "top01Pct": 4246.51,
+      "totalPopulation": null,
+      "pop01": null,
+      "pop1": null,
       "faithSpecs": [
         {
           "name": "H奶僧",
@@ -1108,6 +1213,26 @@
         {
           "name": "D湮灭",
           "score": 4033.2
+        },
+        {
+          "name": "0.9%分数",
+          "score": 0.0
+        },
+        {
+          "name": "0.09%分数",
+          "score": 0.0
+        },
+        {
+          "name": "总人数",
+          "score": 0.0
+        },
+        {
+          "name": "0.1%人数",
+          "score": 0.0
+        },
+        {
+          "name": "1%人数",
+          "score": 0.0
         }
       ],
       "dungeons": [
@@ -1178,7 +1303,12 @@
         ]
       },
       "top1Pct": 4008.83,
+      "top09Pct": null,
+      "top009Pct": null,
       "top01Pct": 4251.74,
+      "totalPopulation": null,
+      "pop01": null,
+      "pop1": null,
       "faithSpecs": [
         {
           "name": "D邪DK",
@@ -1339,6 +1469,26 @@
         {
           "name": "D湮灭",
           "score": 4047.6
+        },
+        {
+          "name": "0.9%分数",
+          "score": 0.0
+        },
+        {
+          "name": "0.09%分数",
+          "score": 0.0
+        },
+        {
+          "name": "总人数",
+          "score": 0.0
+        },
+        {
+          "name": "0.1%人数",
+          "score": 0.0
+        },
+        {
+          "name": "1%人数",
+          "score": 0.0
         }
       ],
       "dungeons": [
@@ -1380,7 +1530,7 @@
       "date": "20260729",
       "season": "至暗之夜S1",
       "seasonWeek": 19,
-      "weeksRemaining": 2,
+      "weeksRemaining": 20,
       "rank1": {
         "score": 4449,
         "player": "Nikovoker",
@@ -1408,9 +1558,22 @@
           }
         ]
       },
-      "top1Pct": 4010.27,
-      "top01Pct": 4252.65,
+      "top1Pct": 4010.39,
+      "top09Pct": 4015.57,
+      "top009Pct": 4254.9,
+      "top01Pct": 4252.77,
+      "totalPopulation": 1639541,
+      "pop01": 1640,
+      "pop1": 16402,
       "faithSpecs": [
+        {
+          "name": "总人数",
+          "score": 1639541.0
+        },
+        {
+          "name": "1%人数",
+          "score": 16402.0
+        },
         {
           "name": "D邪DK",
           "score": 4449.1
@@ -1440,6 +1603,10 @@
           "score": 4376.1
         },
         {
+          "name": "D兽王",
+          "score": 4374.2
+        },
+        {
           "name": "D野德",
           "score": 4373.8
         },
@@ -1464,12 +1631,12 @@
           "score": 4360.1
         },
         {
-          "name": "D兽王",
-          "score": 4359.3
-        },
-        {
           "name": "D暗牧",
           "score": 4352.9
+        },
+        {
+          "name": "D恶魔",
+          "score": 4347.3
         },
         {
           "name": "D刺杀",
@@ -1486,10 +1653,6 @@
         {
           "name": "D元素",
           "score": 4323.7
-        },
-        {
-          "name": "D恶魔",
-          "score": 4320.1
         },
         {
           "name": "D生存",
@@ -1520,6 +1683,10 @@
           "score": 4277.4
         },
         {
+          "name": "0.09%分数",
+          "score": 4254.9
+        },
+        {
           "name": "D奥法",
           "score": 4254.3
         },
@@ -1540,16 +1707,16 @@
           "score": 4219.6
         },
         {
+          "name": "T血DK",
+          "score": 4216.7
+        },
+        {
           "name": "D火法",
           "score": 4214.5
         },
         {
           "name": "T防骑",
           "score": 4206.4
-        },
-        {
-          "name": "T血DK",
-          "score": 4202.8
         },
         {
           "name": "T复仇",
@@ -1570,6 +1737,14 @@
         {
           "name": "D湮灭",
           "score": 4061.2
+        },
+        {
+          "name": "0.9%分数",
+          "score": 4015.57
+        },
+        {
+          "name": "0.1%人数",
+          "score": 1640.0
         }
       ],
       "dungeons": [

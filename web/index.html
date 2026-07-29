@@ -37,10 +37,25 @@
       </div>
     </section>
 
-    <!-- Slide 2: 分数趋势 -->
+    <!-- Slide 2: 分数大盘 + 趋势图 -->
     <section class="slide" id="slide-2">
       <div class="slide-content">
-        <div class="slide-label">分数趋势</div>
+        <div class="slide-label">分数行情</div>
+        <!-- 分数大盘 -->
+        <div class="s2-score-dashboard">
+          <div class="s2-score-row">
+            <!-- 最高分数 -->
+            <div class="s2-hero-card" id="s2-hero"></div>
+            <!-- 核心百分比 -->
+            <div class="s2-pct-group">
+              <div class="s2-pct-core">
+                <div class="s2-pct-card accent-purple" id="s2-pct01"></div>
+                <div class="s2-pct-card accent-gold" id="s2-pct1"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 折线图 -->
         <div class="chart-box" id="chart-score-trend"></div>
       </div>
     </section>

@@ -33,6 +33,11 @@ COL_REMAINING = 3  # 距离结束(周)
 COL_HIGHEST_SCORE = 4   # 最高分数
 COL_TOP01_PCT = 5      # 0.1%分数
 COL_TOP1_PCT = 6       # 1%分数
+COL_TOP09_PCT = 56    # 0.9%精确分数（Excel列57=BE，0-based索引56）
+COL_TOP009_PCT = 57   # 0.09%精确分数（Excel列58=BF，0-based索引57）
+COL_TOTAL_POP = 58    # 总人数（Excel列59=BG，0-based索引58）
+COL_POP01 = 59        # 0.1%人数（Excel列60=BH，0-based索引59）
+COL_POP1 = 60         # 1%人数（Excel列61=BI，0-based索引60）
 COL_TEAM = 7           # 最高队伍(角色名-职业,逗号分隔)
 DUNGEON_START_COL = 8  # 副本层数起始列（8~15，共8个）
 SPEC_START_COL = 16    # 专精分数起始列（16~55，共40个）
@@ -162,6 +167,18 @@ def parse_excel(excel_path: str) -> dict:
         top01pct = safe_float(row[COL_TOP01_PCT])
         top1pct = safe_float(row[COL_TOP1_PCT])
 
+        # 0.9% / 0.09% 分数线：仅使用 Excel 精确值，无数据则为 null
+        def read_col(col_idx):
+            if len(row) > col_idx and row[col_idx] is not None:
+                val = safe_float(row[col_idx])
+                return val if val > 0 else None
+            return None
+        top09pct = read_col(COL_TOP09_PCT)
+        top009pct = read_col(COL_TOP009_PCT)
+        total_pop = safe_int(row[COL_TOTAL_POP] if len(row) > COL_TOTAL_POP else None, 0)
+        pop01 = safe_int(row[COL_POP01] if len(row) > COL_POP01 else None, 0)
+        pop1 = safe_int(row[COL_POP1] if len(row) > COL_POP1 else None, 0)
+
         # --- 专精分数（40 个） ---
         faith_specs = []
         for i, name in enumerate(spec_names):
@@ -196,7 +213,12 @@ def parse_excel(excel_path: str) -> dict:
                 "team": team_players
             },
             "top1Pct": top1pct,
+            "top09Pct": top09pct,
+            "top009Pct": top009pct,
             "top01Pct": top01pct,
+            "totalPopulation": total_pop if total_pop > 0 else None,
+            "pop01": pop01 if pop01 > 0 else None,
+            "pop1": pop1 if pop1 > 0 else None,
             "faithSpecs": faith_specs,
             "dungeons": dungeons
         }
