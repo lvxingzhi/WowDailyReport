@@ -207,7 +207,7 @@ function renderRank1() {
   const l = latest();
   if (!l) return;
 
-  document.getElementById('r1-score').textContent = l.rank1.score;
+  document.getElementById('r1-score').textContent = l.rank1.score.toFixed(1);
 
   const roleIcons = { '坦克': '🛡️', '治疗': '💚', '输出': '⚔️' };
 
@@ -300,7 +300,7 @@ function renderScoreDashboard() {
   if (heroEl) {
     const prevScore = prev ? prev.rank1.score : null;
     heroEl.innerHTML = `
-      <div class="s2-hero-value">${l.rank1.score}</div>
+      <div class="s2-hero-value">${l.rank1.score.toFixed(1)}</div>
       <div class="s2-hero-label">最高分数</div>
       ${(prevScore != null && formatDelta(l.rank1.score, prevScore) !== '0') ? `<div class="s2-hero-delta">${deltaHtml(l.rank1.score, prevScore)}</div>` : ''}
     `;
@@ -417,6 +417,9 @@ let onePagerActive = false;
 function toggleOnePager() {
   onePagerActive = !onePagerActive;
   document.body.classList.toggle('one-pager-mode', onePagerActive);
+  // html 元素也需要允许滚动，否则浏览器截图时内容被截断
+  document.documentElement.style.overflow = onePagerActive ? 'auto' : '';
+  document.documentElement.style.height = onePagerActive ? 'auto' : '';
 
   const btn = document.getElementById('btn-onepager');
   btn.textContent = onePagerActive ? '幻灯片' : '一图流';
@@ -451,7 +454,7 @@ function buildOpScoreSection(l) {
       <div class="op-score-dashboard">
         <!-- 最高分数 -->
         <div class="op-hero-card">
-          <div class="op-hero-value">${l.rank1.score}</div>
+          <div class="op-hero-value">${l.rank1.score.toFixed(1)}</div>
           <div class="op-hero-label">最高分数</div>
           ${heroDelta ? `<div class="op-hero-delta">${heroDelta}</div>` : ''}
         </div>
@@ -519,20 +522,27 @@ function renderOnePager() {
   const cols = 4;
   const perCol = Math.ceil(specs.length / cols);
 
-  container.innerHTML = `
+  const html = `
     <div class="op-container">
 
       <!-- 页头 -->
       <div class="op-header">
         <div class="op-header-title">今日一报</div>
         <div class="op-header-meta">
-          <span>${reportData.meta.season}</span>
+          <span class="op-meta-tag">${reportData.meta.season}</span>
           <span class="sep">·</span>
-          <span>${mmdd} 更新</span>
-          <span class="sep">·</span>
-          <span>第 ${l.seasonWeek} 周</span>
-          <span class="sep">·</span>
-          <span>预计剩余 ${l.weeksRemaining} 周</span>
+          <span class="op-meta-tag">${mmdd} 更新</span>
+        </div>
+        <div class="op-hero-row">
+          <div class="op-hero-item">
+            <div class="op-hero-val">${l.seasonWeek}</div>
+            <div class="op-hero-lbl">当前赛季周</div>
+          </div>
+          <div class="op-hero-divider"></div>
+          <div class="op-hero-item op-hero-accent">
+            <div class="op-hero-val">${l.weeksRemaining}</div>
+            <div class="op-hero-lbl">预计剩余周数</div>
+          </div>
         </div>
       </div>
 
@@ -625,6 +635,8 @@ function renderOnePager() {
 
     </div>
   `;
+  container.innerHTML = html;
+  console.log('[一图流] HTML 长度:', html.length, '专精数:', specs.length);
 
   // 一图流中的趋势图
   setTimeout(() => initOpTrendChart(), 150);

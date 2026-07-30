@@ -12,7 +12,8 @@ import json
 import sys
 import time
 import urllib.request
-from datetime import datetime, date
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
 from pathlib import Path
 
 import openpyxl
@@ -155,50 +156,73 @@ def spec_abbr(class_name, spec_name):
 # ║                       📊 数据抓取函数                            ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
+def _fetch_single_spec(col, class_slug, spec_slug, cn_name):
+    """抓取单个专精 #1，供线程池调用。"""
+    url = (f"https://raider.io/api/mythic-plus/rankings/specs"
+           f"?season={SEASON_SLUG}&region=world"
+           f"&class={class_slug}&spec={spec_slug}&page=0")
+    try:
+        data = api_get(url, retries=2, delay=0.5)
+        ranked = data["rankings"]["rankedCharacters"]
+        if ranked:
+            top = ranked[0]
+            char = top["character"]
+            return col, {
+                "score": top["score"],
+                "name": char["name"],
+                "class": char["class"]["name"],
+                "spec": char["spec"]["name"],
+                "run_id": (top.get("runs") or [{}])[0].get("keystoneRunId"),
+            }
+        return col, {"score": 0, "name": "", "class": "", "spec": "", "run_id": None}
+    except Exception as e:
+        print(f"  ⚠️ 专精 {cn_name} ({class_slug}/{spec_slug}) 抓取失败: {e}")
+        return col, {"score": 0, "name": "", "class": "", "spec": "", "run_id": None}
+
+
 def fetch_spec_scores():
-    """抓取 40 专精全球 #1 分数。返回 {col: (score, char_name, class, spec)}"""
+    """并发抓取 40 专精全球 #1 分数。返回 {col: {...}}"""
     results = {}
-    for col, class_slug, spec_slug, _cn_name in SPEC_MAP:
-        url = (f"https://raider.io/api/mythic-plus/rankings/specs"
-               f"?season={SEASON_SLUG}&region=world"
-               f"&class={class_slug}&spec={spec_slug}&page=0")
-        try:
-            data = api_get(url)
-            ranked = data["rankings"]["rankedCharacters"]
-            if ranked:
-                top = ranked[0]
-                char = top["character"]
-                results[col] = {
-                    "score": top["score"],
-                    "name": char["name"],
-                    "class": char["class"]["name"],
-                    "spec": char["spec"]["name"],
-                }
-            else:
-                results[col] = {"score": 0, "name": "", "class": "", "spec": ""}
-        except Exception as e:
-            print(f"  ⚠️ 专精 {_cn_name} ({class_slug}/{spec_slug}) 抓取失败: {e}")
-            results[col] = {"score": 0, "name": "", "class": "", "spec": ""}
-        time.sleep(0.15)  # 避免请求过快
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        futures = {
+            executor.submit(_fetch_single_spec, col, cs, ss, cn): (col, cn)
+            for col, cs, ss, cn in SPEC_MAP
+        }
+        for future in as_completed(futures):
+            col, info = future.result()
+            results[col] = info
+            cn_name = futures[future][1]
+            print(f"  ✅ {cn_name}: {info['score']:.1f}")
     return results
 
 
+def _fetch_single_dungeon(col, slug, cn_name):
+    """抓取单个副本最高层数，供线程池调用。"""
+    url = (f"https://raider.io/api/v1/mythic-plus/runs"
+           f"?season={SEASON_SLUG}&region=world&dungeon={slug}&page=0")
+    try:
+        data = api_get(url, retries=2, delay=0.5)
+        if data.get("rankings"):
+            return col, data["rankings"][0]["run"]["mythic_level"]
+        return col, 0
+    except Exception as e:
+        print(f"  ⚠️ 副本 {cn_name} ({slug}) 抓取失败: {e}")
+        return col, 0
+
+
 def fetch_dungeon_levels():
-    """抓取 8 副本全球最高限时层数。返回 {col: level}"""
+    """并发抓取 8 副本全球最高限时层数。返回 {col: level}"""
     results = {}
-    for col, slug, _cn_name in DUNGEON_MAP:
-        url = (f"https://raider.io/api/v1/mythic-plus/runs"
-               f"?season={SEASON_SLUG}&region=world&dungeon={slug}&page=0")
-        try:
-            data = api_get(url)
-            if data.get("rankings"):
-                results[col] = data["rankings"][0]["run"]["mythic_level"]
-            else:
-                results[col] = 0
-        except Exception as e:
-            print(f"  ⚠️ 副本 {_cn_name} ({slug}) 抓取失败: {e}")
-            results[col] = 0
-        time.sleep(0.15)
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        futures = {
+            executor.submit(_fetch_single_dungeon, col, slug, cn): (col, cn)
+            for col, slug, cn in DUNGEON_MAP
+        }
+        for future in as_completed(futures):
+            col, level = future.result()
+            results[col] = level
+            cn_name = futures[future][1]
+            print(f"  ✅ {cn_name}: {level}")
     return results
 
 
@@ -232,80 +256,61 @@ def fetch_exact_rank_score(total, pct):
     return round(score, 2), rank
 
 
-def fetch_top_team():
+def fetch_top_characters():
     """
-    获取全球最高分角色的队伍信息。
-    从所有专精 #1 中找最高分，取对应 run roster，格式化为 H 列字符串。
-    返回 (highest_score, team_str)
+    获取全球最高分及所有并列最高分角色。
+    调全局排行榜 API（按分数降序），逐页收集直到分数低于最高分。
+    返回 (highest_score, chars_str)
+      chars_str: "角色名-专精, 角色名-专精, ..."
     """
     print("  🔍 正在查找全球最高分角色...")
 
-    # 获取所有专精 #1，找出最高分
-    best_score = 0
-    best_run_id = None
-    best_char = None
-
-    for col, class_slug, spec_slug, _cn_name in SPEC_MAP:
-        url = (f"https://raider.io/api/mythic-plus/rankings/specs"
-               f"?season={SEASON_SLUG}&region=world"
-               f"&class={class_slug}&spec={spec_slug}&page=0")
-        try:
-            data = api_get(url)
-            ranked = data["rankings"]["rankedCharacters"]
-            if ranked and ranked[0]["score"] > best_score:
-                best_score = ranked[0]["score"]
-                best_run_id = ranked[0]["runs"][0]["keystoneRunId"]
-                best_char = ranked[0]["character"]
-        except Exception:
-            pass
-        time.sleep(0.1)
-
-    if best_score == 0:
-        print("  ⚠️ 未能获取最高分")
+    url = (f"https://raider.io/api/mythic-plus/rankings/characters"
+           f"?season={SEASON_SLUG}&region=world&class=all&role=all"
+           f"&page=0&pageSize=40")
+    try:
+        data = api_get(url)
+        ranked = data["rankings"]["rankedCharacters"]
+        if not ranked:
+            print("  ⚠️ 未能获取最高分")
+            return 0, ""
+        best_score = ranked[0]["score"]
+    except Exception as e:
+        print(f"  ⚠️ 获取全球最高分失败: {e}")
         return 0, ""
 
-    print(f"  最高分: {best_score:.1f} (run_id={best_run_id})")
+    # 收集所有并列最高分的角色（跨页）
+    top_chars = []
+    page = 0
+    while True:
+        if page > 0:
+            url = (f"https://raider.io/api/mythic-plus/rankings/characters"
+                   f"?season={SEASON_SLUG}&region=world&class=all&role=all"
+                   f"&page={page}&pageSize=40")
+            data = api_get(url)
+            ranked = data["rankings"]["rankedCharacters"]
 
-    # 获取 run details 拿到 roster
-    url = (f"https://raider.io/api/v1/mythic-plus/run-details"
-           f"?season={SEASON_SLUG}&id={best_run_id}")
-    details = api_get(url)
-    roster = details.get("roster", [])
+        for entry in ranked:
+            if entry["score"] < best_score:
+                # 分数开始下降，停止收集
+                break
+            char = entry["character"]
+            abbr = spec_abbr(char["class"]["name"], char["spec"]["name"])
+            top_chars.append(f"{char['name']}-{abbr}")
+        else:
+            # 本页全部都是最高分，继续翻下一页
+            page += 1
+            time.sleep(0.15)
+            continue
+        # 遇到分数下降，退出
+        break
 
-    team_parts = []
-    for member in roster:
-        char = member["character"]
-        abbr = spec_abbr(char["class"]["name"], char["spec"]["name"])
-        team_parts.append(f"{char['name']}-{abbr}")
-
-    team_str = ",".join(team_parts)
-    print(f"  队伍: {team_str}")
-    return round(best_score, 1), team_str
-
-
-def fetch_season_info():
-    """获取赛季周数、结束日期等信息。返回 (season_name, season_week, end_date_str)"""
-    url = f"https://raider.io/api/v1/mythic-plus/static-data?expansion_id={EXPANSION_ID}"
-    data = api_get(url)
-    for s in data.get("seasons", []):
-        if s["slug"] == SEASON_SLUG:
-            ends_cn = s.get("ends", {}).get("cn", "")
-            return s.get("name", SEASON_SLUG), None, ends_cn
-    return SEASON_SLUG, None, ""
+    chars_str = ",".join(top_chars)
+    print(f"  最高分: {best_score:.1f}（{len(top_chars)} 人）: {chars_str}")
+    return round(float(best_score), 1), chars_str
 
 
-def calc_weeks_remaining(end_date_str):
-    """根据结束日期计算剩余周数。"""
-    if not end_date_str:
-        return "?"
-    try:
-        end_date = datetime.strptime(end_date_str[:10], "%Y-%m-%d").date()
-        today = date.today()
-        delta = end_date - today
-        weeks = max(0, delta.days // 7)
-        return weeks
-    except Exception:
-        return "?"
+
 
 
 # ╔══════════════════════════════════════════════════════════════════╗
@@ -348,14 +353,7 @@ def main():
     print(f"🚀 开始抓取数据... (日期={today_str}, 赛季={SEASON_SLUG})")
     print()
 
-    # 1. 赛季信息
-    print("📅 赛季信息...")
-    season_name, _, end_date = fetch_season_info()
-    weeks_remaining = calc_weeks_remaining(end_date)
-    print(f"  赛季: {season_name}, 结束: {end_date[:10] if end_date else '?'}, 剩余周: {weeks_remaining}")
-    print()
-
-    # 2. 分数线（中国区）
+    # 1. 分数线（中国区）
     print("📊 分数线 (CN)...")
     top01pct, top1pct, total_pop, pop01, pop1 = fetch_season_cutoffs()
     print(f"  0.1%: {top01pct}, 1%: {top1pct}  (总人数={total_pop}, 0.1%人数={pop01}, 1%人数={pop1})")
@@ -389,42 +387,25 @@ def main():
         print(f"  {cn_name}: {info.get('score', 0):.1f}")
     print()
 
-    # 5. 最高分+队伍
+    # 5. 最高分+队伍（复用 spec_scores，不再重复请求 API）
     print("👑 最高分队伍...")
-    highest_score, team_str = fetch_top_team()
+    highest_score, top_chars = fetch_top_characters()
     print()
 
     # 6. 组装 Excel 行数据
     # 列号映射：
     # A=1(日期), B=2(赛季), C=3(赛季周), D=4(剩余周),
-    # E=5(最高分), F=6(0.1%), G=7(1%), H=8(队伍),
+    # E=5(最高分), F=6(0.1%), G=7(1%), H=8(最高分角色),
     # I-P=9~16(副本), Q-BD=17~56(专精),
     # BE=57(0.9%), BF=58(0.09%), BG=59(总人数)
-
-    # 从已有数据继承赛季名、推算赛季周
-    wb = openpyxl.load_workbook(excel_path)
-    ws = wb["每日数据"]
-    prev_week = None
-    prev_season = None
-    if ws.max_row >= 2:
-        prev_week = ws.cell(row=ws.max_row, column=3).value
-        prev_season = ws.cell(row=ws.max_row, column=2).value
-    wb.close()
-
-    # 赛季名优先使用已有的（中文名），否则用 API 返回的
-    if prev_season and str(prev_season).strip():
-        season_name = str(prev_season).strip()
-    season_week = (int(prev_week) + 1) if prev_week is not None and isinstance(prev_week, (int, float)) else 1
+    # 注：B~D 列（赛季名/周数/剩余周）由用户自行填写，脚本不自动计算
 
     row_data = {
         1: int(today_str),
-        2: season_name,
-        3: season_week,
-        4: weeks_remaining,
         5: highest_score,
         6: top01pct,
         7: top1pct,
-        8: team_str,
+        8: top_chars,
     }
 
     # 副本层数

@@ -95,7 +95,7 @@ def parse_excel(excel_path: str) -> dict:
     dungeon_names = headers[DUNGEON_START_COL:DUNGEON_START_COL + 8]
 
     # 获取专精名称列表（第 18~57 列，共 40 个）
-    spec_names = headers[SPEC_START_COL:]
+    spec_names = headers[SPEC_START_COL:SPEC_START_COL + 40]
 
     daily_list = []
 
@@ -139,7 +139,7 @@ def parse_excel(excel_path: str) -> dict:
             if isinstance(score_raw, str):
                 score_raw = score_raw.strip().replace("\t", "")
             try:
-                rank1_score = int(float(score_raw))
+                rank1_score = float(score_raw)
             except (ValueError, TypeError):
                 rank1_score = 0
 
