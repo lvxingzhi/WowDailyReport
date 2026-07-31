@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
 
   schedule:
-    # 每天北京时间 09:00
-    # UTC+8，所以 UTC 01:00
-    - cron: "0 1 * * *"
+    # 每天北京时间 08:00
+    # UTC+8，所以 UTC 00:00
+    - cron: "0 0 * * *"
 
 
 jobs:

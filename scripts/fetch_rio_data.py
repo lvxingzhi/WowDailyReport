@@ -13,7 +13,7 @@ import sys
 import time
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import openpyxl
@@ -317,6 +317,34 @@ def fetch_top_characters():
 # ║                       📝 Excel 写入                             ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
+def check_today_exists(excel_path, today_str):
+    """
+    检查 Excel「每日数据」Sheet 最后一行是否已是今天的数据。
+
+    参数:
+        excel_path: Excel 文件路径
+        today_str: 今日日期字符串，格式 YYYYMMDD
+
+    返回:
+        bool: True 表示今天数据已存在
+    """
+    wb = openpyxl.load_workbook(excel_path)
+    ws = wb["每日数据"]
+    if ws.max_row < 2:
+        wb.close()
+        return False
+    last_date_cell = ws.cell(row=ws.max_row, column=1).value
+    wb.close()
+    if last_date_cell is not None:
+        if isinstance(last_date_cell, (int, float)):
+            return str(int(last_date_cell)) == today_str
+        elif isinstance(last_date_cell, datetime):
+            return last_date_cell.strftime("%Y%m%d") == today_str
+        else:
+            return str(last_date_cell).strip() == today_str
+    return False
+
+
 def append_to_excel(excel_path, row_data):
     """
     向 Excel「每日数据」Sheet 追加一行。
@@ -337,6 +365,78 @@ def append_to_excel(excel_path, row_data):
     print(f"✅ 已追加到 {excel_path} 第 {next_row} 行")
 
 
+def compute_week_info(excel_path):
+    """
+    从上一条记录自动推算赛季周和剩余周。
+    以周四为每周起点，计算上一条日期到今天之间经过了多少个周四。
+
+    参数:
+        excel_path: Excel 文件路径
+
+    返回:
+        (season_name, season_week, weeks_remaining)
+        如果上一条无数据则返回 (None, "?", "?")
+    """
+    wb = openpyxl.load_workbook(excel_path)
+    ws = wb["每日数据"]
+    if ws.max_row < 2:
+        wb.close()
+        return None, "?", "?"
+
+    last_row = ws.max_row
+    last_date_val = ws.cell(row=last_row, column=1).value   # A列
+    last_season = ws.cell(row=last_row, column=2).value      # B列
+    last_week = ws.cell(row=last_row, column=3).value        # C列
+    last_remaining = ws.cell(row=last_row, column=4).value   # D列
+    wb.close()
+
+    # --- 解析上一条日期 ---
+    if isinstance(last_date_val, (int, float)):
+        last_date_str = str(int(last_date_val))
+    elif isinstance(last_date_val, datetime):
+        last_date_str = last_date_val.strftime("%Y%m%d")
+    else:
+        last_date_str = str(last_date_val).strip() if last_date_val else ""
+
+    try:
+        last_date = datetime.strptime(last_date_str, "%Y%m%d").date()
+    except ValueError:
+        return str(last_season) if last_season else "?", "?", "?"
+
+    today = datetime.now().date()
+
+    # --- 解析上一条的赛季周和剩余周 ---
+    def safe_int_or_none(val):
+        if val is None:
+            return None
+        try:
+            return int(float(str(val).strip()))
+        except (ValueError, TypeError):
+            return None
+
+    last_week_num = safe_int_or_none(last_week)
+    last_remaining_num = safe_int_or_none(last_remaining)
+
+    if last_week_num is None or last_remaining_num is None:
+        return str(last_season) if last_season else "?", "?", "?"
+
+    # --- 计算跨越的周四数（周四 weekday=3）---
+    wed_count = 0
+    d = last_date + timedelta(days=1)
+    while d <= today:
+        if d.weekday() == 3:
+            wed_count += 1
+        d += timedelta(days=1)
+
+    new_week = last_week_num + wed_count
+    new_remaining = max(0, last_remaining_num - wed_count)
+    season_name = str(last_season) if last_season else "?"
+
+    print(f"📅 上条日期={last_date_str} 周={last_week_num} 剩余={last_remaining_num} →"
+          f" 经过{wed_count}个周四 → 本周={new_week} 剩余={new_remaining}")
+    return season_name, new_week, new_remaining
+
+
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║                          🚀 主流程                              ║
 # ╚══════════════════════════════════════════════════════════════════╝
@@ -352,6 +452,14 @@ def main():
     today_str = datetime.now().strftime("%Y%m%d")
     print(f"🚀 开始抓取数据... (日期={today_str}, 赛季={SEASON_SLUG})")
     print()
+
+    # 0. 检查今天是否已有数据（避免重复跑覆盖）
+    if check_today_exists(excel_path, today_str):
+        print(f"⏭️ 今天 ({today_str}) 的数据已存在，跳过抓取。")
+        sys.exit(0)
+
+    # 0.5. 自动推算赛季周和剩余周
+    season_name, season_week, weeks_remaining = compute_week_info(excel_path)
 
     # 1. 分数线（中国区）
     print("📊 分数线 (CN)...")
@@ -398,10 +506,13 @@ def main():
     # E=5(最高分), F=6(0.1%), G=7(1%), H=8(最高分角色),
     # I-P=9~16(副本), Q-BD=17~56(专精),
     # BE=57(0.9%), BF=58(0.09%), BG=59(总人数)
-    # 注：B~D 列（赛季名/周数/剩余周）由用户自行填写，脚本不自动计算
+    # B~D 列由 compute_week_info() 根据上一条记录自动推算
 
     row_data = {
         1: int(today_str),
+        2: season_name,
+        3: season_week,
+        4: weeks_remaining,
         5: highest_score,
         6: top01pct,
         7: top1pct,
