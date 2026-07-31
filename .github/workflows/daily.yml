@@ -1,0 +1,53 @@
+name: Update Daily Report
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    # 每天北京时间 09:00
+    # UTC+8，所以 UTC 01:00
+    - cron: "0 1 * * *"
+
+
+jobs:
+  update:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+
+    - name: Fetch Raider data
+      run: |
+        python scripts/fetch_rio_data.py
+
+
+    - name: Parse Excel
+      run: |
+        python scripts/parse_excel.py
+
+
+    - name: Commit changes
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+
+        git add .
+
+        git commit -m "auto update daily report" || exit 0
+
+        git push
