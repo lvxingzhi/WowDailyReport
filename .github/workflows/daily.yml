@@ -1,5 +1,8 @@
 name: Update Daily Report
 
+permissions:
+  contents: write
+  
 on:
   workflow_dispatch:
 
