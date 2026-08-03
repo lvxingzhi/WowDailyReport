@@ -665,13 +665,9 @@ function initOpTrendChart() {
           value: v,
           symbolSize: hlSize,
           itemStyle: {
+            color: color,
             borderColor: '#000000',
-            borderWidth: 2,
-            shadowBlur: 0,
-            shadowColor: '#000000',
-            shadowOffsetX: 3,
-            shadowOffsetY: 3,
-            color: color
+            borderWidth: 3
           }
         }
       : v);

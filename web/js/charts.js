@@ -42,20 +42,16 @@ function initScoreTrendChart() {
   const dates = recent.map(d => d.date.substring(4, 8));
   const lastIdx = recent.length - 1;
 
-  /** 最后一个数据点加粗高亮 */
+  /** 最后一个数据点加粗高亮：去偏移阴影，避免“错位”感 */
   function makeHighlightData(values, normalSize, hlSize, color) {
     return values.map((v, i) => i === lastIdx
       ? {
           value: v,
           symbolSize: hlSize,
           itemStyle: {
+            color: color,
             borderColor: '#000000',
-            borderWidth: 2,
-            shadowBlur: 0,
-            shadowColor: '#000000',
-            shadowOffsetX: 3,
-            shadowOffsetY: 3,
-            color: color
+            borderWidth: 3
           }
         }
       : v);
@@ -96,7 +92,7 @@ function initScoreTrendChart() {
         type: 'line',
         data: makeHighlightData(
           recent.map(d => d.top01Pct),
-          10, 18, neoColors.pct01
+          10, 16, neoColors.pct01
         ),
         lineStyle: { color: neoColors.pct01, width: 4 },
         itemStyle: { color: neoColors.pct01, borderColor: '#000000', borderWidth: 2 },
@@ -114,7 +110,7 @@ function initScoreTrendChart() {
         type: 'line',
         data: makeHighlightData(
           recent.map(d => d.top1Pct),
-          10, 18, neoColors.pct1
+          10, 16, neoColors.pct1
         ),
         lineStyle: { color: neoColors.pct1, width: 4 },
         itemStyle: { color: neoColors.pct1, borderColor: '#000000', borderWidth: 2 },
