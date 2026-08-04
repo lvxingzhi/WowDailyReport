@@ -316,6 +316,10 @@ body::before {
   -webkit-text-stroke: 3px #000000;
 }
 
+.hero-card.hero-accent .hero-value.hero-done {
+  font-size: 90px;
+}
+
 .hero-label {
   font-size: 20px;
   font-weight: 700;
@@ -1251,6 +1255,10 @@ body.one-pager-mode #one-pager {
 .op-hero-accent .op-hero-val {
   color: var(--neo-white);
   -webkit-text-stroke: 3px #000000;
+}
+
+.op-hero-accent .op-hero-val.op-done {
+  font-size: 72px;
 }
 
 .op-hero-lbl {

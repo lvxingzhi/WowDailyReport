@@ -1,7 +1,7 @@
 {
   "meta": {
     "season": "至暗之夜S1",
-    "generatedAt": "2026-08-04T01:22:19",
+    "generatedAt": "2026-08-04T17:46:22",
     "dataCount": 13,
     "latestDate": "20260804"
   },
@@ -11,6 +11,7 @@
       "season": "至暗之夜S1",
       "seasonWeek": 16,
       "weeksRemaining": "?",
+      "daysRemaining": null,
       "rank1": {
         "score": 4412.0,
         "player": "Drtreantino",
@@ -247,6 +248,7 @@
       "season": "至暗之夜S1",
       "seasonWeek": 16,
       "weeksRemaining": "?",
+      "daysRemaining": null,
       "rank1": {
         "score": 4418.8,
         "player": "Drtreantino",
@@ -483,6 +485,7 @@
       "season": "至暗之夜S1",
       "seasonWeek": 17,
       "weeksRemaining": "?",
+      "daysRemaining": null,
       "rank1": {
         "score": 4418.8,
         "player": "Drtreantino",
@@ -719,6 +722,7 @@
       "season": "至暗之夜S1",
       "seasonWeek": 17,
       "weeksRemaining": "?",
+      "daysRemaining": null,
       "rank1": {
         "score": 4418.8,
         "player": "Drtreantino",
@@ -955,6 +959,7 @@
       "season": "至暗之夜S1",
       "seasonWeek": 17,
       "weeksRemaining": "?",
+      "daysRemaining": null,
       "rank1": {
         "score": 4420.3,
         "player": "绿绿月光",
@@ -1175,6 +1180,7 @@
       "season": "至暗之夜S1",
       "seasonWeek": 18,
       "weeksRemaining": 3,
+      "daysRemaining": 16,
       "rank1": {
         "score": 4449.1,
         "player": "Zacdruid",
@@ -1409,8 +1415,9 @@
     {
       "date": "20260729",
       "season": "至暗之夜S1",
-      "seasonWeek": 19,
-      "weeksRemaining": 2,
+      "seasonWeek": 18,
+      "weeksRemaining": 3,
+      "daysRemaining": 14,
       "rank1": {
         "score": 4449.1,
         "player": "Nikovoker",
@@ -1647,6 +1654,7 @@
       "season": "至暗之夜S1",
       "seasonWeek": 19,
       "weeksRemaining": 2,
+      "daysRemaining": 13,
       "rank1": {
         "score": 4449.4,
         "player": "Butaneanzx",
@@ -1875,6 +1883,7 @@
       "season": "至暗之夜S1",
       "seasonWeek": 19,
       "weeksRemaining": 2,
+      "daysRemaining": 12,
       "rank1": {
         "score": 4449.4,
         "player": "Butaneanzx",
@@ -2103,6 +2112,7 @@
       "season": "至暗之夜S1",
       "seasonWeek": 19,
       "weeksRemaining": 2,
+      "daysRemaining": 11,
       "rank1": {
         "score": 4450.8,
         "player": "Butaneanzx",
@@ -2331,6 +2341,7 @@
       "season": "至暗之夜S1",
       "seasonWeek": 19,
       "weeksRemaining": 2,
+      "daysRemaining": 10,
       "rank1": {
         "score": 4450.8,
         "player": "Butaneanzx",
@@ -2559,6 +2570,7 @@
       "season": "至暗之夜S1",
       "seasonWeek": 19,
       "weeksRemaining": 2,
+      "daysRemaining": 9,
       "rank1": {
         "score": 4451.5,
         "player": "Titiquemonk",
@@ -2795,6 +2807,7 @@
       "season": "至暗之夜S1",
       "seasonWeek": 19,
       "weeksRemaining": 2,
+      "daysRemaining": 8,
       "rank1": {
         "score": 4453.8,
         "player": "Speedk",

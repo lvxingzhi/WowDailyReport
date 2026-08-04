@@ -183,14 +183,28 @@ function latest() {
 }
 
 /**
+ * 剩余时间显示: 剩余周数 / 剩余天数(≤14天) / 已结束(0天)
+ */
+function remainingDisplay(l) {
+  const d = l.daysRemaining;
+  if (d === 0) return { value: '已结束', label: '赛季状态', done: true };
+  if (d != null && d <= 14) return { value: d, label: '预计剩余天数' };
+  return { value: l.weeksRemaining, label: '预计剩余周数' };
+}
+
+/**
  * 渲染赛季概览（Slide 1）
  */
 function renderOverview() {
   const l = latest();
   if (!l) return;
 
+  const rem = remainingDisplay(l);
+  const remEl = document.getElementById('so-remaining');
+  remEl.textContent = rem.value;
+  remEl.classList.toggle('hero-done', !!rem.done);
+  document.getElementById('so-remaining-label').textContent = rem.label;
   document.getElementById('so-week').textContent = l.seasonWeek;
-  document.getElementById('so-remaining').textContent = l.weeksRemaining;
 
   // 固定顶部：赛季名称 + 更新日期
   const dateStr = reportData.meta.latestDate;
@@ -521,6 +535,7 @@ function renderOnePager() {
   const titleLine = l.top01Pct; // 0.1% 称号线，低于此线受不平衡待遇
   const cols = 4;
   const perCol = Math.ceil(specs.length / cols);
+  const rem = remainingDisplay(l);
 
   const html = `
     <div class="op-container">
@@ -540,8 +555,8 @@ function renderOnePager() {
           </div>
           <div class="op-hero-divider"></div>
           <div class="op-hero-item op-hero-accent">
-            <div class="op-hero-val">${l.weeksRemaining}</div>
-            <div class="op-hero-lbl">预计剩余周数</div>
+            <div class="op-hero-val${rem.done ? ' op-done' : ''}">${rem.value}</div>
+            <div class="op-hero-lbl">${rem.label}</div>
           </div>
         </div>
       </div>

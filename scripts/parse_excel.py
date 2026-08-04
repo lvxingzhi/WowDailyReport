@@ -9,7 +9,7 @@
 import json
 import os
 import sys
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from pathlib import Path
 
 import openpyxl
@@ -73,6 +73,40 @@ def parse_national_team(ws) -> list:
                 "members": members
             })
     return lineups
+
+
+def compute_days_remaining(date_str, weeks_remaining):
+    """
+    将「剩余周数」精确换算为「剩余天数」。
+    规则: 剩余 N 周 = 从当天起(若当天恰为周四, 则从次日算起)
+          第 N 个周四的前一天为赛季最后一天。
+    例: 周二剩 2 周 -> 第 1 个周四变最后一周, 第 2 个周四前一天为最后一天。
+
+    参数:
+        date_str: YYYYMMDD 字符串
+        weeks_remaining: int(剩余周数) 或 "?" 等非数字
+
+    返回:
+        int(剩余天数, 0 表示已结束) 或 None(无法计算)
+    """
+    if not isinstance(weeks_remaining, int):
+        return None
+    if weeks_remaining <= 0:
+        return 0
+    try:
+        d = datetime.strptime(date_str, "%Y%m%d").date()
+    except ValueError:
+        return None
+
+    cursor = d + timedelta(days=1) if d.weekday() == 3 else d
+    thursday_count = 0
+    while thursday_count < weeks_remaining:
+        if cursor.weekday() == 3:
+            thursday_count += 1
+            if thursday_count == weeks_remaining:
+                return (cursor - timedelta(days=1) - d).days
+        cursor += timedelta(days=1)
+    return None
 
 
 def parse_excel(excel_path: str) -> dict:
@@ -201,11 +235,13 @@ def parse_excel(excel_path: str) -> dict:
                 "level": int(level) if level is not None else 0
             })
 
+        weeks_remaining = safe_int(row[COL_REMAINING])
         day_data = {
             "date": date_str,
             "season": row[COL_SEASON],
             "seasonWeek": safe_int(row[COL_WEEK]),
-            "weeksRemaining": safe_int(row[COL_REMAINING]),
+            "weeksRemaining": weeks_remaining,
+            "daysRemaining": compute_days_remaining(date_str, weeks_remaining),
             "rank1": {
                 "score": rank1_score,
                 "player": rank1_player,
