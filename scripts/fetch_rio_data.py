@@ -25,7 +25,7 @@ import openpyxl
 # --- 赛季配置 ---
 SEASON_SLUG = "season-mn-1"     # 赛季 slug，如 season-mn-1, season-mn-2, season-tww-1
 EXPANSION_ID = 11               # 资料片 ID：11=Midnight, 10=TheWarWithin
-EXCEL_FILE = "大秘境分数行情_至暗之夜第一赛季.xlsx"  # Excel 文件名
+EXCEL_FILE = "大秘境分数行情.xlsx"  # Excel 文件名
 
 # 代理设置（留空则不使用代理）
 PROXY = ""

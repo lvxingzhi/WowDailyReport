@@ -10,7 +10,7 @@
 python3 scripts/fetch_rio_data.py
 ```
 
-自动从 Raider.io 抓取并追加到 Excel，无需手动。
+从 Raider.io 抓取数据并追加到 Excel。
 
 ### 2. 生成前端 JSON
 
@@ -34,7 +34,7 @@ python3 -m http.server 8080
 ```python
 SEASON_SLUG = "season-mn-2"                     # 新赛季 slug
 EXPANSION_ID = 11                               # 资料片 ID（换资料片时改）
-EXCEL_FILE = "大秘境分数行情_至暗之夜第二赛季.xlsx"  # 新 Excel 文件
+EXCEL_FILE = "大秘境分数行情.xlsx"              # Excel 文件名（跨赛季沿用同一文件名）
 ```
 
 如果副本轮换或专精有增减，更新 `DUNGEON_MAP` 和 `SPEC_MAP`。同资料片内通常不用改。

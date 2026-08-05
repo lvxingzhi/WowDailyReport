@@ -17,7 +17,7 @@ import openpyxl
 
 # 项目根目录（scripts 的上级目录）
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-EXCEL_FILE = PROJECT_ROOT / "大秘境分数行情_至暗之夜第一赛季.xlsx"
+EXCEL_FILE = PROJECT_ROOT / "大秘境分数行情.xlsx"
 DATA_DIR = PROJECT_ROOT / "data"
 ARCHIVE_DIR = DATA_DIR / "archive"
 CURRENT_FILE = DATA_DIR / "current.json"
