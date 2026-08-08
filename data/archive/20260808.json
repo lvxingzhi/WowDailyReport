@@ -1,7 +1,7 @@
 {
   "meta": {
     "season": "至暗之夜S1",
-    "generatedAt": "2026-08-08T06:54:47",
+    "generatedAt": "2026-08-08T07:48:53",
     "dataCount": 17,
     "latestDate": "20260808"
   },
@@ -3735,13 +3735,13 @@
           }
         ]
       },
-      "top1Pct": 4022.7,
-      "top09Pct": 4037.45,
-      "top009Pct": 4266.63,
-      "top01Pct": 4261.79,
-      "totalPopulation": 1681677,
-      "pop01": 1682,
-      "pop1": 16817,
+      "top1Pct": 4024.47,
+      "top09Pct": 4037.64,
+      "top009Pct": 4266.96,
+      "top01Pct": 4262.71,
+      "totalPopulation": 1685147,
+      "pop01": 1686,
+      "pop1": 16852,
       "faithSpecs": [
         {
           "name": "D邪DK",
@@ -3837,7 +3837,7 @@
         },
         {
           "name": "D浩劫",
-          "score": 4304.0
+          "score": 4306.7
         },
         {
           "name": "H恩护",
