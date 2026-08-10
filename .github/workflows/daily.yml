@@ -5,6 +5,12 @@ permissions:
   
 on:
   workflow_dispatch:
+    inputs:
+      overwrite:
+        description: '当天已有数据时是否覆盖更新（勾选=覆盖重写，不勾选=跳过）'
+        required: false
+        default: false
+        type: boolean
 
   schedule:
     # 每天北京时间 08:05
@@ -35,6 +41,8 @@ jobs:
 
 
     - name: Fetch Raider data
+      env:
+        OVERWRITE_TODAY: ${{ github.event.inputs.overwrite || 'false' }}
       run: |
         python scripts/fetch_rio_data.py
 

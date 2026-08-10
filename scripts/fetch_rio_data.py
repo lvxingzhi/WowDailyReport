@@ -9,6 +9,7 @@ Raider.io 数据自动抓取脚本
 @author ext.ahs.lvxingz1
 """
 import json
+import os
 import sys
 import time
 import urllib.request
@@ -345,6 +346,40 @@ def check_today_exists(excel_path, today_str):
     return False
 
 
+def delete_row_by_date(excel_path, today_str):
+    """
+    删除「每日数据」Sheet 中指定日期的记录行（用于覆盖更新）。
+
+    参数:
+        excel_path: Excel 文件路径
+        today_str: 日期字符串，格式 YYYYMMDD
+
+    返回:
+        bool: True 表示找到并删除了记录
+    """
+    wb = openpyxl.load_workbook(excel_path)
+    ws = wb["每日数据"]
+    # 从下往上找，只删除最后一行匹配日期的记录
+    for row in range(ws.max_row, 1, -1):
+        val = ws.cell(row=row, column=1).value
+        if val is None:
+            continue
+        if isinstance(val, (int, float)):
+            match = str(int(val)) == today_str
+        elif isinstance(val, datetime):
+            match = val.strftime("%Y%m%d") == today_str
+        else:
+            match = str(val).strip() == today_str
+        if match:
+            ws.delete_rows(row)
+            wb.save(excel_path)
+            wb.close()
+            print(f"🗑️ 已删除 {today_str} 原有记录（第 {row} 行），准备覆盖更新")
+            return True
+    wb.close()
+    return False
+
+
 def append_to_excel(excel_path, row_data):
     """
     向 Excel「每日数据」Sheet 追加一行。
@@ -453,10 +488,17 @@ def main():
     print(f"🚀 开始抓取数据... (日期={today_str}, 赛季={SEASON_SLUG})")
     print()
 
-    # 0. 检查今天是否已有数据（避免重复跑覆盖）
+    # 0. 检查今天是否已有数据
+    #    默认跳过；GitHub Action 手动触发时勾选 overwrite 开关则覆盖更新
+    overwrite = os.environ.get("OVERWRITE_TODAY", "").strip().lower() in ("1", "true", "yes", "on")
     if check_today_exists(excel_path, today_str):
-        print(f"⏭️ 今天 ({today_str}) 的数据已存在，跳过抓取。")
-        sys.exit(0)
+        if overwrite:
+            print(f"🔄 今天 ({today_str}) 的数据已存在，覆盖模式开启，删除旧记录后重新写入。")
+            delete_row_by_date(excel_path, today_str)
+        else:
+            print(f"⏭️ 今天 ({today_str}) 的数据已存在，跳过抓取。")
+            print("   如需覆盖更新，请在 GitHub Actions 手动触发时勾选 overwrite 开关。")
+            sys.exit(0)
 
     # 0.5. 自动推算赛季周和剩余周
     season_name, season_week, weeks_remaining = compute_week_info(excel_path)
