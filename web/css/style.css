@@ -320,11 +320,6 @@ body::before {
   font-size: 90px;
 }
 
-/* 长文本自适应（≥4字，如“最后一天”） */
-.hero-card.hero-accent .hero-value.val-long {
-  font-size: 110px;
-}
-
 .hero-label {
   font-size: 20px;
   font-weight: 700;
@@ -1264,11 +1259,6 @@ body.one-pager-mode #one-pager {
 
 .op-hero-accent .op-hero-val.op-done {
   font-size: 72px;
-}
-
-/* 长文本自适应（≥4字，如“最后一天”） */
-.op-hero-accent .op-hero-val.val-long {
-  font-size: 88px;
 }
 
 .op-hero-lbl {

@@ -184,13 +184,11 @@ function latest() {
 
 /**
  * 剩余时间显示: 剩余周数 / 剩余天数(≤14天) / 0(非周四) / 已结束(0天且数据日为周四)
- * 规则: 剩余0天时, 只有数据日期是周四(最终报告已发布)才显示「已结束」;
- *       否则(如周三, 赛季最后一天)显示数字 0。
  */
 function remainingDisplay(l) {
   const d = l.daysRemaining;
   if (d === 0) {
-    // 解析数据日期 YYYYMMDD 的星期, getDay(): 0=周日 ... 4=周四
+    // 仅当数据日期为周四(最终报告已发布)才判定已结束, 否则显示 0(赛季最后一天)
     const s = String(l.date);
     const dow = new Date(+s.slice(0, 4), +s.slice(4, 6) - 1, +s.slice(6, 8)).getDay();
     return dow === 4
@@ -212,7 +210,6 @@ function renderOverview() {
   const remEl = document.getElementById('so-remaining');
   remEl.textContent = rem.value;
   remEl.classList.toggle('hero-done', !!rem.done);
-  remEl.classList.toggle('val-long', String(rem.value).length >= 4);
   document.getElementById('so-remaining-label').textContent = rem.label;
   document.getElementById('so-week').textContent = l.seasonWeek;
 
@@ -565,7 +562,7 @@ function renderOnePager() {
           </div>
           <div class="op-hero-divider"></div>
           <div class="op-hero-item op-hero-accent">
-            <div class="op-hero-val${rem.done ? ' op-done' : ''}${String(rem.value).length >= 4 ? ' val-long' : ''}">${rem.value}</div>
+            <div class="op-hero-val${rem.done ? ' op-done' : ''}">${rem.value}</div>
             <div class="op-hero-lbl">${rem.label}</div>
           </div>
         </div>
