@@ -183,9 +183,9 @@ function latest() {
 }
 
 /**
- * 剩余时间显示: 剩余周数 / 剩余天数(≤14天) / 0天(非周四) / 已结束(0天且数据日为周四)
+ * 剩余时间显示: 剩余周数 / 剩余天数(≤14天) / 0(非周四) / 已结束(0天且数据日为周四)
  * 规则: 剩余0天时, 只有数据日期是周四(最终报告已发布)才显示「已结束」;
- *       否则(如周三, 赛季最后一天)显示「0天」。
+ *       否则(如周三, 赛季最后一天)显示数字 0。
  */
 function remainingDisplay(l) {
   const d = l.daysRemaining;
@@ -195,7 +195,7 @@ function remainingDisplay(l) {
     const dow = new Date(+s.slice(0, 4), +s.slice(4, 6) - 1, +s.slice(6, 8)).getDay();
     return dow === 4
       ? { value: '已结束', label: '赛季状态', done: true }
-      : { value: '0天', label: '预计剩余天数', done: false };
+      : { value: 0, label: '预计剩余天数', done: false };
   }
   if (d != null && d <= 14) return { value: d, label: '预计剩余天数' };
   return { value: l.weeksRemaining, label: '预计剩余周数' };
