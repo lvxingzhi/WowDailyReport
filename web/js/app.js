@@ -212,6 +212,7 @@ function renderOverview() {
   const remEl = document.getElementById('so-remaining');
   remEl.textContent = rem.value;
   remEl.classList.toggle('hero-done', !!rem.done);
+  remEl.classList.toggle('val-long', String(rem.value).length >= 4);
   document.getElementById('so-remaining-label').textContent = rem.label;
   document.getElementById('so-week').textContent = l.seasonWeek;
 
@@ -564,7 +565,7 @@ function renderOnePager() {
           </div>
           <div class="op-hero-divider"></div>
           <div class="op-hero-item op-hero-accent">
-            <div class="op-hero-val${rem.done ? ' op-done' : ''}">${rem.value}</div>
+            <div class="op-hero-val${rem.done ? ' op-done' : ''}${String(rem.value).length >= 4 ? ' val-long' : ''}">${rem.value}</div>
             <div class="op-hero-lbl">${rem.label}</div>
           </div>
         </div>
