@@ -1,9 +1,9 @@
 {
   "meta": {
     "season": "至暗之夜S1",
-    "generatedAt": "2026-10-10T04:59:20",
-    "dataCount": 80,
-    "latestDate": "20261010"
+    "generatedAt": "2026-10-11T04:47:00",
+    "dataCount": 81,
+    "latestDate": "20261011"
   },
   "daily": [
     {
@@ -18416,6 +18416,239 @@
       },
       "top1Pct": 4035.99,
       "top09Pct": 4042.19,
+      "top009Pct": 4270.8,
+      "top01Pct": 4268.21,
+      "totalPopulation": 1707667,
+      "pop01": 1708,
+      "pop1": 17079,
+      "faithSpecs": [
+        {
+          "name": "D邪DK",
+          "score": 4461.4
+        },
+        {
+          "name": "D噬灭",
+          "score": 4461.4
+        },
+        {
+          "name": "D增辉",
+          "score": 4461.4
+        },
+        {
+          "name": "H奶僧",
+          "score": 4461.4
+        },
+        {
+          "name": "T熊T",
+          "score": 4460.2
+        },
+        {
+          "name": "D武器",
+          "score": 4387.8
+        },
+        {
+          "name": "H戒律",
+          "score": 4379.7
+        },
+        {
+          "name": "D野德",
+          "score": 4379.0
+        },
+        {
+          "name": "T酒仙",
+          "score": 4379.0
+        },
+        {
+          "name": "H奶萨",
+          "score": 4379.0
+        },
+        {
+          "name": "D兽王",
+          "score": 4376.8
+        },
+        {
+          "name": "D冰法",
+          "score": 4376.8
+        },
+        {
+          "name": "D惩戒",
+          "score": 4372.2
+        },
+        {
+          "name": "D暗牧",
+          "score": 4369.3
+        },
+        {
+          "name": "D增强",
+          "score": 4366.5
+        },
+        {
+          "name": "D狂徒",
+          "score": 4365.1
+        },
+        {
+          "name": "D恶魔",
+          "score": 4361.3
+        },
+        {
+          "name": "D刺杀",
+          "score": 4350.5
+        },
+        {
+          "name": "D元素",
+          "score": 4342.5
+        },
+        {
+          "name": "D生存",
+          "score": 4340.4
+        },
+        {
+          "name": "D狂暴",
+          "score": 4340.4
+        },
+        {
+          "name": "D毁灭",
+          "score": 4327.8
+        },
+        {
+          "name": "D浩劫",
+          "score": 4323.7
+        },
+        {
+          "name": "D踏风",
+          "score": 4307.3
+        },
+        {
+          "name": "D鸟德",
+          "score": 4306.8
+        },
+        {
+          "name": "T复仇",
+          "score": 4299.9
+        },
+        {
+          "name": "H恩护",
+          "score": 4295.7
+        },
+        {
+          "name": "D敏锐",
+          "score": 4295.2
+        },
+        {
+          "name": "H奶骑",
+          "score": 4291.9
+        },
+        {
+          "name": "D奥法",
+          "score": 4278.3
+        },
+        {
+          "name": "T防战",
+          "score": 4269.0
+        },
+        {
+          "name": "D冰DK",
+          "score": 4268.2
+        },
+        {
+          "name": "D射击",
+          "score": 4254.2
+        },
+        {
+          "name": "D火法",
+          "score": 4225.6
+        },
+        {
+          "name": "T防骑",
+          "score": 4217.3
+        },
+        {
+          "name": "T血DK",
+          "score": 4216.7
+        },
+        {
+          "name": "H神牧",
+          "score": 4190.7
+        },
+        {
+          "name": "D痛苦",
+          "score": 4145.8
+        },
+        {
+          "name": "H奶德",
+          "score": 4137.5
+        },
+        {
+          "name": "D湮灭",
+          "score": 4102.2
+        }
+      ],
+      "dungeons": [
+        {
+          "name": "执政团之座",
+          "level": 24
+        },
+        {
+          "name": "节点希纳斯",
+          "level": 25
+        },
+        {
+          "name": "艾杰斯亚学院",
+          "level": 24
+        },
+        {
+          "name": "萨隆矿坑",
+          "level": 25
+        },
+        {
+          "name": "迈萨拉洞窟",
+          "level": 25
+        },
+        {
+          "name": "通天峰",
+          "level": 24
+        },
+        {
+          "name": "风行者之塔",
+          "level": 25
+        },
+        {
+          "name": "魔导师平台",
+          "level": 25
+        }
+      ]
+    },
+    {
+      "date": "20261011",
+      "season": "至暗之夜S1",
+      "seasonWeek": 29,
+      "weeksRemaining": 0,
+      "daysRemaining": 0,
+      "rank1": {
+        "score": 4461.4,
+        "player": "Speedk",
+        "class": "D邪DK",
+        "team": [
+          {
+            "player": "Speedk",
+            "class": "D邪DK"
+          },
+          {
+            "player": "Voluxar",
+            "class": "D浩劫"
+          },
+          {
+            "player": "Roibendeux",
+            "class": "H奶僧"
+          },
+          {
+            "player": "Sjelelele",
+            "class": "D增辉"
+          }
+        ]
+      },
+      "top1Pct": 4035.99,
+      "top09Pct": 4042.18,
       "top009Pct": 4270.8,
       "top01Pct": 4268.21,
       "totalPopulation": 1707667,
